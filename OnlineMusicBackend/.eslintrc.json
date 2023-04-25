@@ -1,0 +1,23 @@
+{
+    "env": {
+        "node": true
+    },
+    "extends":"eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "rules": {
+        "no-unused-vars":"warn",
+        "indent":["warn", 4],
+        "comma-spacing": ["warn", { "before": false, "after": true }], // 参数间逗号后的空格
+        "quotes": ["warn", "single"], // 永远的单引号
+        "semi": ["warn", "never"], // 语句尾部不添加分号
+        "key-spacing": ["warn", { "mode": "strict" }], // 对象键值间空格
+        "object-curly-spacing": ["warn", "always"], // 解构赋值大括号间空格
+        "space-infix-ops": "warn", // 中缀运算符空格
+        "brace-style":["warn", "stroustrup", { "allowSingleLine": true }],
+        "block-spacing":"warn",
+        "space-before-blocks":"warn"
+    }
+
+}
