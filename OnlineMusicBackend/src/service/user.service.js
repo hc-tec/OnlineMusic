@@ -8,14 +8,14 @@ class UserService {
         return res.dataValues
     }
 
-    async getUserIdByName(user_name) {
+    async getUserInfoByName(user_name) {
         const res = await User.findOne({
-            attributes: ['id'],
+            attributes: ['id', 'user_name', 'password', 'avatar_path', 'is_admin'],
             where: {
                 user_name: user_name
             }
         })
-        return res.dataValues.id
+        return res ? res.dataValues : null
     }
 
     async hasUserByName(user_name) {
