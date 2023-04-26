@@ -112,7 +112,7 @@ const verifyLogin = async (ctx, next) => {
 // 通过token验证是否登录，未登录则不执行下个中间件（此中间件会被频繁使用，例如修改密码，更改头像，发布评论等基本任何请求）
 const auth = async (ctx, next) => {
     // 获取请求头中的token
-    const { authorization } = ctx.request.header
+    const { authorization = '' } = ctx.request.header
     const token = authorization.replace('Bearer ', '')
     
     try {
@@ -139,7 +139,22 @@ const auth = async (ctx, next) => {
             return
         }
     }
-    
+
+    await next()
+}
+
+const hasAdminPermission = async (ctx, next) => {
+    const { isAdmin } = ctx.state.userInfo
+
+    if(!isAdmin) {
+        ctx.body = {
+            code: '10011',
+            message: '没有管理员权限',
+            result: ''
+        }
+        return
+    }
+
     await next()
 }
 
@@ -148,5 +163,6 @@ module.exports = {
     verifyUser,
     cryptPassword,
     verifyLogin,
-    auth
+    auth,
+    hasAdminPermission,
 }
