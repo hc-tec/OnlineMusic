@@ -27,6 +27,18 @@ class UserService {
         })
         return res.length > 0 ? true : false
     }
+    // 根据id修改头像或密码
+    async updateUserById({ id, password, avatar_path }) {
+        const whereOpt = { id }
+        let newValue = {}
+        
+        password && (newValue.password = password)
+        avatar_path && (newValue.avatar_path = avatar_path)
+
+        const res = await User.update(newValue, { where: whereOpt })
+
+        return !!res[0]
+    }
 }
  
 module.exports = new UserService()

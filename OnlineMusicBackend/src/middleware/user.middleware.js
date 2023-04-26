@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const { hasUserByName, getUserInfoByName } = require('../service/user.service')
 // 中间件 在route请求中使用，满足一定条件调用next()，然后执行下一个中间件
@@ -68,7 +69,7 @@ const cryptPassword = async (ctx, next) => {
 
     await next()
 }
-// 登录前判断用户是否存在
+// 首次登录验证
 const verifyLogin = async (ctx, next) => {
     const { user_name, password } = ctx.request.body
 
@@ -93,6 +94,8 @@ const verifyLogin = async (ctx, next) => {
             }
             return
         }
+        // 用户存在则将查询到的信息传递到下个中间件——controller下的login
+        ctx.state.userInfo = res
     }
     catch (error) {
         ctx.status = 500
@@ -106,9 +109,44 @@ const verifyLogin = async (ctx, next) => {
 
     await next()
 }
+// 通过token验证是否登录，未登录则不执行下个中间件（此中间件会被频繁使用，例如修改密码，更改头像，发布评论等基本任何请求）
+const auth = async (ctx, next) => {
+    // 获取请求头中的token
+    const { authorization } = ctx.request.header
+    const token = authorization.replace('Bearer ', '')
+    
+    try {
+        // 将获取到的payload传递给下个中间件
+        ctx.state.userInfo = jwt.verify(token, 'BINJUR')
+    }
+    catch (error) {
+        // token过期
+        if(error.name === 'TokenExpiredError') {
+            ctx.body = {
+                code: '10008',
+                message: 'token过期',
+                result: ''
+            }
+            return
+        }
+        // 无效的token
+        else if(error.name === 'JsonWebTokenError') {
+            ctx.body = {
+                code: '10009',
+                message: '无效的token',
+                result: ''
+            }
+            return
+        }
+    }
+    
+    await next()
+}
+
 module.exports = {
     userValidator,
     verifyUser,
     cryptPassword,
-    verifyLogin
+    verifyLogin,
+    auth
 }
