@@ -9,7 +9,7 @@ router.post('/register', userValidator, verifyUser, cryptPassword, register)
 
 router.post('/login', userValidator, verifyLogin, login)
 
-router.post('/changePassword', auth, cryptPassword, changePassword)
+router.post('/changePassword', auth, userValidator, cryptPassword, changePassword)
 
 router.post('/changeAvatar', auth, changeAvatar)
 

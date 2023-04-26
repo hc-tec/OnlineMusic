@@ -6,7 +6,7 @@ const { hasUserByName, getUserInfoByName } = require('../service/user.service')
 
 // 验证密码和账号的格式
 const userValidator = async (ctx, next) => {
-    let { user_name, password } = ctx.request.body
+    let { user_name = '', password = '' } = ctx.request.body
 
     // 合法性判断
     user_name = user_name.replace(/\s+/g, '')

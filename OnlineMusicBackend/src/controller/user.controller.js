@@ -3,7 +3,7 @@ const fs = require('fs')
 
 const jwt = require('jsonwebtoken')
 
-const { createUser, updateUserById } = require('../service/user.service')
+const { createUser, updateUserById, getUserInfoByName } = require('../service/user.service')
 
 // 将执行某个请求的操作写在controller文件夹下
 class UserController {
@@ -55,7 +55,10 @@ class UserController {
     }
     // 修改头像
     async changeAvatar(ctx) {
-        const { id, avatar_path  } = ctx.state.userInfo
+        // 不要通过payload获取可变的量，如avatar_path，token不会实时更新，大坑Fuck
+        const { id, user_name } = ctx.state.userInfo
+        const { avatar_path } = await getUserInfoByName(user_name)
+
         const avatarFile = ctx.request.files.file
         const avatarTypes = ['image/jpeg', 'image/png', 'image/webp']
         let delete_flag = false
