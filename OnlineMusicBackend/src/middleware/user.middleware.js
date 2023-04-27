@@ -143,26 +143,10 @@ const auth = async (ctx, next) => {
     await next()
 }
 
-const hasAdminPermission = async (ctx, next) => {
-    const { isAdmin } = ctx.state.userInfo
-
-    if(!isAdmin) {
-        ctx.body = {
-            code: '10011',
-            message: '没有管理员权限',
-            result: ''
-        }
-        return
-    }
-
-    await next()
-}
-
 module.exports = {
     userValidator,
     verifyUser,
     cryptPassword,
     verifyLogin,
     auth,
-    hasAdminPermission,
 }

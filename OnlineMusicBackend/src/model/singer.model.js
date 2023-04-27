@@ -11,7 +11,7 @@ const Singer = seq.define('Singer', {
         comment: '歌手名'
     },
     birthday: {
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         allowNull: true,
         comment: '生日'
     },

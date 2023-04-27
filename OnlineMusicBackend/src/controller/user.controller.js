@@ -20,18 +20,31 @@ class UserController {
     }
     // 首次登录
     async login(ctx) {
-        // 从上个中间件取数据, 除了密码外的所有字段均被当成payload(载荷)
-        const { id, user_name, avatar_path, is_admin } = ctx.state.userInfo
+        // 从上个中间件取数据, 所有基本不变的字段均被当成payload(载荷)
+        const { id, user_name, is_admin, avatar_path } = ctx.state.userInfo
 
         ctx.body = {
             code: '0',
             message: '登录成功',
             // 通过私钥（自定义）生成token, 过期时间一天
             result: {
-                token: jwt.sign({ id, user_name, avatar_path, is_admin }, 'BINJUR', { expiresIn: '1d' })
+                token: jwt.sign({ id, user_name, is_admin }, 'BINJUR', { expiresIn: '1d' }),
+                userInfo: { id, user_name, is_admin, avatar_path }
             }
         }
         
+    }
+    // 通过token的自动登录
+    async autoLogin(ctx) {
+        const { id, user_name, is_admin, avatar_path } = ctx.state.userInfo
+
+        ctx.body = {
+            code: '0',
+            message: '登录成功',
+            result: {
+                userInfo: { id, user_name, is_admin, avatar_path }
+            }
+        }
     }
     // 修改密码
     async changePassword(ctx) {
@@ -55,7 +68,7 @@ class UserController {
     }
     // 修改头像
     async changeAvatar(ctx) {
-        // 不要通过payload获取可变的量，如avatar_path，token不会实时更新，大坑Fuck
+        // 不要通过payload获取可变的量，如avatar_path，token不会实时更新，大坑fuck
         const { id, user_name } = ctx.state.userInfo
         const { avatar_path } = await getUserInfoByName(user_name)
 
