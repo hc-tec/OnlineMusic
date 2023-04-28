@@ -19,6 +19,31 @@ const hasAdminPermission = async (ctx, next) => {
 
     await next()
 }
+// 验证添加 修改歌手时的参数
+const verifySinger = async (ctx, next) => {
+    const { singer_name, birthday } = ctx.request.body
+    // 日期处理
+    birthday && (ctx.request.body.birthday = new Date(birthday))
+
+    if(!isNameValid(singer_name)) {
+        ctx.body = {
+            code: '10016',
+            message: '歌手名不合法',
+            result: ''
+        }
+        return
+    }
+    else if(ctx.request.url === '/addSinger' && await getSingerInfo({ singer_name })) {
+        ctx.body = {
+            code: '10017',
+            message: '歌手已存在',
+            result: ''
+        }
+        return
+    }
+
+    await next()
+}
 // 验证上传歌曲时的参数、歌曲文件
 const verifySong = async (ctx, next) => {
     const { song_name, singer_id } = ctx.request.body
@@ -150,8 +175,10 @@ const verifyChangeSong = async (ctx, next) => {
     await next()
 }
 
+
 module.exports = {
     hasAdminPermission,
     verifySong,
-    verifyChangeSong
+    verifyChangeSong,
+    verifySinger
 }

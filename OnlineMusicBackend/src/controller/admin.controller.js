@@ -1,31 +1,11 @@
 const path = require('path')
 const fs = require('fs')
 
-const { createSinger, getSingerInfo, createSong, updateSongById } = require('../service/admin.service')
-const isNameValid = require('../isNameValid')
+const { createSinger, updateSingerById, createSong, updateSongById } = require('../service/admin.service')
 
 class AdminController {
     async addSinger(ctx) {
-        let { singer_name = '', birthday, gender, description } = ctx.request.body
-        // 日期处理
-        birthday = new Date(birthday)
-
-        if(!isNameValid(singer_name)) {
-            ctx.body = {
-                code: '10016',
-                message: '歌手名不合法',
-                result: ''
-            }
-            return
-        }
-        else if(await getSingerInfo({ singer_name })) {
-            ctx.body = {
-                code: '10017',
-                message: '歌手已存在',
-                result: ''
-            }
-            return
-        }
+        const { singer_name, birthday, gender, description } = ctx.request.body
         
         const res = await createSinger({ singer_name, birthday, gender, description })
         ctx.body = {
@@ -34,6 +14,27 @@ class AdminController {
             result: res
         }
         
+    }
+
+    async changeSinger(ctx) {
+        const { id, singer_name, birthday, gender, description } = ctx.request.body
+
+        const res = await updateSingerById({ id, singer_name, birthday, gender, description })
+        if(res) {
+            ctx.body = {
+                code: '0',
+                message: '歌手信息修改成功',
+                result: res
+            }
+        }
+        else{
+            ctx.body = {
+                code: '10028',
+                message: '歌手信息修改失败',
+                result: ''
+            }
+        }
+
     }
 
     async addSong(ctx) {

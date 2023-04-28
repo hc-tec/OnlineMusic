@@ -3,7 +3,7 @@ const fs = require('fs')
 
 const jwt = require('jsonwebtoken')
 
-const { createUser, updateUserById, getUserInfoByName } = require('../service/user.service')
+const { createUser, updateUserById, getUserInfoByName, createLoveSong } = require('../service/user.service')
 
 // 将执行某个请求的操作写在controller文件夹下
 class UserController {
@@ -129,6 +129,27 @@ class UserController {
             ctx.body = {
                 code: '10015',
                 message: '修改头像失败',
+                result: ''
+            }
+        }
+    }
+    // 添加歌曲至我喜欢
+    async addLoveSong(ctx) {
+
+        try {
+            const user_id = ctx.state.userInfo.id
+            const { song_id } = ctx.request.body
+            const res = await createLoveSong(user_id, song_id)
+            ctx.body = {
+                code: '0',
+                message: '收藏歌曲成功',
+                result: res
+            }
+        }
+        catch (err) {
+            ctx.body = {
+                code: '10029',
+                message: '收藏歌曲失败',
                 result: ''
             }
         }

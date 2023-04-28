@@ -1,3 +1,4 @@
+const LoveSong = require('../model/loveSong.model')
 const User = require('../model/user.model')
 
 class UserService {
@@ -38,6 +39,11 @@ class UserService {
         const res = await User.update(newValue, { where: whereOpt })
 
         return !!res[0]
+    }
+    // 添加收藏音乐的记录
+    async createLoveSong(user_id, song_id) {
+        const res = await LoveSong.create({ user_id, song_id })
+        return res.dataValues
     }
 }
  

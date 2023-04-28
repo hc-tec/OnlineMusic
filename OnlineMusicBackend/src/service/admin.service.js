@@ -1,3 +1,4 @@
+const { where } = require('sequelize')
 const Singer = require('../model/singer.model')
 const Song = require('../model/song.model')
 
@@ -16,6 +17,22 @@ class AdminService {
 
         const res = await Singer.create(singerObj)
         return res.dataValues
+    }
+    // 根据歌手ID跟新歌手信息
+    async updateSingerById({ id, singer_name, birthday, gender, description }) {
+        let newValue = {}
+        const whereOpt = { id }
+
+        singer_name && (newValue.singer_name = singer_name)
+        birthday && (newValue.birthday = birthday)
+        description && (newValue.description = description)
+
+        if(gender != undefined && gender != null) {
+            newValue.gender = gender
+        }
+
+        const res = await Singer.update(newValue, { where: whereOpt })
+        return !!res[0]
     }
     // 获取歌手信息（通过ID或歌手名）
     async getSingerInfo({ id, singer_name }) {
