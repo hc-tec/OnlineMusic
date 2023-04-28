@@ -8,6 +8,7 @@ const HistorySong = seq.define('HistorySong', {
     song_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        onDelete: 'cascade',
         references: {
             model: Song,
             key: 'id'
@@ -17,6 +18,7 @@ const HistorySong = seq.define('HistorySong', {
     user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        onDelete: 'cascade',
         references: {
             model: User,
             key: 'id'

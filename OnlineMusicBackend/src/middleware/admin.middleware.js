@@ -33,7 +33,7 @@ const verifySinger = async (ctx, next) => {
         }
         return
     }
-    else if(ctx.request.url === '/addSinger' && await getSingerInfo({ singer_name })) {
+    else if(ctx.request.url == '/addSinger' && await getSingerInfo({ singer_name })) {
         ctx.body = {
             code: '10017',
             message: '歌手已存在',
@@ -110,7 +110,7 @@ const verifySong = async (ctx, next) => {
     if(resArr.length) {
         // 检测歌手是否有同名的歌曲
         const hasExistSong = resArr.find((item) => {
-            return item.song_name === song_name
+            return item.song_name == song_name
         })
         if(hasExistSong) {
             fs.existsSync(songFile.filepath) && fs.unlinkSync(songFile.filepath)

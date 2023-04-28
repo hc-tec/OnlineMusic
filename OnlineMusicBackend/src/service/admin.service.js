@@ -1,4 +1,3 @@
-const { where } = require('sequelize')
 const Singer = require('../model/singer.model')
 const Song = require('../model/song.model')
 
@@ -63,18 +62,20 @@ class AdminService {
         return res.dataValues
     }
     // 根据歌曲ID修改歌曲部分信息
-    async updateSongById({ id, song_name, file_name, lyric }) {
+    async updateSongById({ id, song_name, file_name, lyric, visitors }) {
         let newValue = {}
         const whereOpt = { id }
 
         if(song_name !== undefined ) newValue.song_name = song_name
         if(file_name !== undefined ) newValue.file_name = file_name
         if(lyric !== undefined ) newValue.lyric = lyric
+        if(visitors !== undefined) newValue.visitors = visitors
 
         const res = await Song.update(newValue, { where: whereOpt })
 
         return !!res[0]
     }
+
 
 }
 

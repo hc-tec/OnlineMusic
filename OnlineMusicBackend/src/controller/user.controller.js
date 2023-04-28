@@ -3,7 +3,8 @@ const fs = require('fs')
 
 const jwt = require('jsonwebtoken')
 
-const { createUser, updateUserById, getUserInfoByName, createLoveSong } = require('../service/user.service')
+const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment } = require('../service/user.service')
+const { updateSongById } = require('../service/admin.service')
 
 // 将执行某个请求的操作写在controller文件夹下
 class UserController {
@@ -135,10 +136,23 @@ class UserController {
     }
     // 添加歌曲至我喜欢
     async addLoveSong(ctx) {
-
         try {
             const user_id = ctx.state.userInfo.id
             const { song_id } = ctx.request.body
+
+            const loveSongInfo = await queryLoveSongByUserId(user_id)
+
+            if(loveSongInfo.find((item) => {
+                return item.song_id == song_id
+            })) {
+                ctx.body = {
+                    code: '10031',
+                    message: '你已收藏该音乐',
+                    result: ''
+                }
+                return
+            }
+
             const res = await createLoveSong(user_id, song_id)
             ctx.body = {
                 code: '0',
@@ -154,7 +168,133 @@ class UserController {
             }
         }
     }
+    // 将歌曲从我喜欢中移除
+    async deleteLoveSong(ctx) {
+        try {
+            const user_id = ctx.state.userInfo.id
+            const { song_id } = ctx.request.body
+            const res = await deleteLoveSong(user_id, song_id)
+            ctx.body = {
+                code: '0',
+                message: '取消收藏歌曲成功',
+                result: res
+            }
+        }
+        catch (err) {
+            ctx.body = {
+                code: '10030',
+                message: '取消收藏歌曲失败',
+                result: ''
+            }
+        }
+    }
+    // 听了一次歌引起数据变化
+    async listenSong(ctx) {
+        const { song_id } = ctx.request.body
+        const user_id = ctx.state.userInfo.id
+        const { id, song_name, singer_id, publish_time, file_name, visitors, lyric } = ctx.state.songInfo
 
+        const res = await updateSongById({ id: song_id, visitors: visitors + 1 })
+        if(!res) {
+            ctx.body = {
+                code: '10032',
+                message: '更新访客量失败',
+                result: ''
+            }
+            return
+        }
+
+        // 判断该歌曲是否在收藏中
+        const loveSongs = await queryLoveSongByUserId(user_id)
+        let listen_num = undefined
+
+        for (const item of loveSongs) {
+            if(item.song_id == song_id) {
+                listen_num = item.listen_num + 1
+                if(!await updateLoveSong(user_id, song_id, listen_num)) {
+                    ctx.body = {
+                        code: '10033',
+                        message: '更新收藏歌曲播放次数失败',
+                        result: ''
+                    }
+                    return
+                }
+                break
+            }
+        }
+
+        // 创建或更新历史记录
+        const listen_time = new Date()
+        const updateSuccessFlag = await updateHistorySong(user_id, song_id, listen_time)
+
+        if(!updateSuccessFlag) {
+            await createHistorySong(user_id, song_id, listen_time)
+        }
+
+        ctx.body = {
+            code: '0',
+            message: '一次听歌的的数据变化已完成',
+            result: {
+                songInfo: { id, song_name, singer_id, publish_time, file_name, lyric,
+                    visitors: visitors + 1
+                },
+                listen_num,
+                listen_time
+            }
+        }
+    }
+    // 添加评论
+    async addComment(ctx) {
+        const user_id = ctx.state.userInfo.id
+        const { song_id, content } = ctx.request.body
+
+        if(!content) {
+            ctx.body = {
+                code: '10034',
+                message: '评论不能为空',
+                result: ''
+            }
+            return
+        }
+
+        const res = await createComment(user_id, song_id, content, new Date())
+        ctx.body = {
+            code: '0',
+            message: '添加评论成功',
+            result: res
+        }
+    }
+    // 用户删除自己的评论
+    async deleteComment(ctx) {
+        const user_id = ctx.state.userInfo.id
+        const { comment_id } = ctx.request.body
+
+        const res = await queryCommentInfo({ comment_id })
+        if(res.user_id != user_id) {
+            ctx.body = {
+                code: '10035',
+                message: '不能删除其他人的评论',
+                result: ''
+            }
+            return
+        }
+        
+
+        const result = await deleteComment(comment_id)
+        if(!result) {
+            ctx.body = {
+                code: '10036',
+                message: '删除评论失败',
+                result: ''
+            }
+            return
+        }
+        ctx.body = {
+            code: '0',
+            message: '删除评论成功',
+            result: result
+        }
+    }
 }
 
 module.exports = new UserController()

@@ -14,6 +14,7 @@ const Comment = seq.define('Comment', {
     song_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        onDelete: 'cascade',
         references: {
             model: Song,
             key: 'id'
@@ -23,6 +24,7 @@ const Comment = seq.define('Comment', {
     user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        onDelete: 'cascade',
         references: {
             model: User,
             key: 'id'

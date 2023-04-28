@@ -1,5 +1,8 @@
 const LoveSong = require('../model/loveSong.model')
+const Song = require('../model/song.model')
 const User = require('../model/user.model')
+const HistorySong = require('../model/historySong.model')
+const Comment = require('../model/comment.model')
 
 class UserService {
 
@@ -40,10 +43,75 @@ class UserService {
 
         return !!res[0]
     }
+    // 根据歌曲id获取歌曲信息
+    async querySongInfoById(id) {
+        const res = await Song.findOne({
+            attributes: ['id', 'song_name', 'singer_id', 'publish_time', 'file_name', 'visitors', 'lyric'],
+            where: { id }
+        })
+        return res ? res.dataValues : null
+    }
+    // 根据用户id查询所有该用户收藏的所有歌曲的id和listen_num
+    async queryLoveSongByUserId(user_id) {
+        const res = await LoveSong.findAll({
+            attributes: ['song_id', 'listen_num'],
+            where: { user_id }
+        })
+
+        return res
+    }
     // 添加收藏音乐的记录
     async createLoveSong(user_id, song_id) {
         const res = await LoveSong.create({ user_id, song_id })
         return res.dataValues
+    }
+    // 删除收藏音乐的记录
+    async deleteLoveSong(user_id, song_id) {
+        const res = await LoveSong.destroy({
+            where: { user_id, song_id }
+        })
+        return res
+    }
+    // 更新收藏音乐表的访客量数据
+    async updateLoveSong(user_id, song_id, listen_num) {
+        const res = await LoveSong.update({ listen_num }, { where: { user_id, song_id } })
+        return !!res[0]
+    }
+    // 创建歌曲历史记录
+    async createHistorySong(user_id, song_id, listen_time) {
+        const res = await HistorySong.create({ user_id, song_id, listen_time })
+        return res.dataValues
+    }
+    //更新歌曲历史记录
+    async updateHistorySong(user_id, song_id, listen_time) {
+        const res = await HistorySong.update({ listen_time }, { where: { user_id, song_id } })
+        return !!res[0]
+    }
+    // 创建评论
+    async createComment(user_id, song_id, content, publish_time) {
+        const res = await Comment.create({ user_id, song_id, content, publish_time })
+        return res.dataValues
+    }
+    // 根据评论id或歌曲id获取评论信息
+    async queryCommentInfo({ comment_id, song_id }) {
+        if(comment_id != undefined) {
+            const res = await Comment.findOne({
+                attributes: ['user_id'],
+                where: { id: comment_id }
+            })
+            return res ? res.dataValues : null
+        }
+        else {
+            const res = await Comment.findAll({
+                attributes: ['id', 'content', 'song_id', 'user_id', 'favour', 'publish_time'],
+                where: { song_id }
+            })
+            return res
+        }
+    }
+    // 删除评论
+    async deleteComment(id) {
+        return await Comment.destroy({ where: { id } })
     }
 }
  

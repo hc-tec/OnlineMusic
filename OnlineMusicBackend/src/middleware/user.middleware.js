@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-const { hasUserByName, getUserInfoByName } = require('../service/user.service')
+const { hasUserByName, getUserInfoByName, querySongInfoById } = require('../service/user.service')
 // 中间件 在route请求中使用，满足一定条件调用next()，然后执行下一个中间件
 
 // 验证密码和账号的格式
@@ -143,10 +143,29 @@ const auth = async (ctx, next) => {
     await next()
 }
 
+// 收藏歌曲时或取消收藏判断歌曲是否存在
+const verifySongIdExist = async (ctx, next) => {
+    const { song_id } = ctx.request.body
+
+    const res = await querySongInfoById(song_id)
+    if(!res) {
+        ctx.body = {
+            code: '10031',
+            message: '歌曲不存在',
+            result: ''
+        }
+        return
+    }
+
+    ctx.state.songInfo = res
+    await next()
+}
+
 module.exports = {
     userValidator,
     verifyUser,
     cryptPassword,
     verifyLogin,
     auth,
+    verifySongIdExist
 }
