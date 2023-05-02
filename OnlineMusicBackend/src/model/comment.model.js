@@ -6,7 +6,7 @@ const User = require('./user.model')
 
 const Comment = seq.define('Comment', {
     content: {
-        type: DataTypes.STRING(511),
+        type: DataTypes.TEXT,
         allowNull: false,
         defaultValue: '',
         comment: '评论具体内容'
@@ -47,6 +47,6 @@ const Comment = seq.define('Comment', {
 })
 
 // 创建数据表
-// Comment.sync()
+// Comment.sync({ alter: true })
 
 module.exports = Comment

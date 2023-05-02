@@ -36,7 +36,7 @@ const Song = seq.define('Song', {
         comment: '访问量'
     },
     lyric: {
-        type: DataTypes.STRING(511),
+        type: DataTypes.TEXT,
         allowNull: false,
         defaultValue: '纯音乐，请欣赏',
         comment: '歌词'
@@ -46,6 +46,6 @@ const Song = seq.define('Song', {
 })
 
 // 创建数据表
-// Song.sync()
+// Song.sync({ alter: true })
 
 module.exports = Song
