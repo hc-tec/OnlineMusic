@@ -28,10 +28,11 @@ const User = seq.define('User', {
         comment: '是否为管理员 0不是 1是'
     }
 }, {
-    tableName: 'users'
+    tableName: 'users',
+    timestamps: false
 })
 
 // 创建数据表
-// User.sync()
+// User.sync({ alter: true })
 
 module.exports = User

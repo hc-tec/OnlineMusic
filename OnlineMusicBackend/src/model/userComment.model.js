@@ -33,10 +33,11 @@ const UserComment = seq.define('UserComment', {
         comment: '用户是否赞了这个评论'
     }
 }, {
-    tableName: 'user_comments'
+    tableName: 'user_comments',
+    timestamps: false
 })
 
 // 创建数据表
-// UserComment.sync()
+// UserComment.sync({ alter: true })
 
 module.exports = UserComment

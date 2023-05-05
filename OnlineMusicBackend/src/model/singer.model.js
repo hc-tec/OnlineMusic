@@ -26,10 +26,11 @@ const Singer = seq.define('Singer', {
         comment: '简介'
     }
 }, {
-    tableName: 'singers'
+    tableName: 'singers',
+    timestamps: false
 })
 
 // 创建数据表
-// Singer.sync()
+// Singer.sync({ alter: true })
 
 module.exports = Singer

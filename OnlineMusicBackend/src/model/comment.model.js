@@ -43,7 +43,8 @@ const Comment = seq.define('Comment', {
         comment: '评论发布时间'
     },
 }, {
-    tableName: 'comments'
+    tableName: 'comments',
+    timestamps: false
 })
 
 // 创建数据表

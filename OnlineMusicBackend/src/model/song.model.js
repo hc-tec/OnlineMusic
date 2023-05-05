@@ -42,7 +42,8 @@ const Song = seq.define('Song', {
         comment: '歌词'
     }
 }, {
-    tableName: 'songs'
+    tableName: 'songs',
+    timestamps: false
 })
 
 // 创建数据表

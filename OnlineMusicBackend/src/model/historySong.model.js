@@ -31,10 +31,11 @@ const HistorySong = seq.define('HistorySong', {
         comment: '最后听歌时间'
     }
 }, {
-    tableName: 'history_songs'
+    tableName: 'history_songs',
+    timestamps: false
 })
 
 // 创建数据表
-// HistorySong.sync()
+// HistorySong.sync({ alter: true })
 
 module.exports = HistorySong

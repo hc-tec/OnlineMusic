@@ -2,7 +2,7 @@ const fs = require('fs')
 
 const { getSingerInfo, getSongInfoBySingerId } = require('../service/admin.service')
 
-const isNameValid = require('../isNameValid')
+const isNameValid = require('../utils/isNameValid')
 
 // 是否有管理员权限
 const hasAdminPermission = async (ctx, next) => {

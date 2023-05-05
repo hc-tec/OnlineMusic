@@ -37,7 +37,8 @@ class UserController {
     }
     // 通过token的自动登录
     async autoLogin(ctx) {
-        const { id, user_name, is_admin, avatar_path } = ctx.state.userInfo
+        const { id, user_name, is_admin } = ctx.state.userInfo
+        const { avatar_path } = await getUserInfoByName(user_name)
 
         ctx.body = {
             code: '0',

@@ -1,10 +1,11 @@
+// 记录歌单中有哪些歌曲
 const { DataTypes } = require('sequelize')
-
 const seq = require('../db/seq')
-const Song = require('./song.model')
-const User = require('./user.model')
 
-const LoveSong = seq.define('LoveSong', {
+const Song = require('./song.model')
+const SongKu = require('./songKu.model')
+
+const SongKuSong = seq.define('SongKuSong', {
     song_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -15,28 +16,22 @@ const LoveSong = seq.define('LoveSong', {
         },
         comment: '外键, 连接歌曲表的歌曲ID'
     },
-    user_id: {
+    songku_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         onDelete: 'cascade',
         references: {
-            model: User,
+            model: SongKu,
             key: 'id'
         },
-        comment: '外键, 连接用户表的用户ID'
+        comment: '外键, 连接歌单表的歌单ID'
     },
-    listen_num: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-        comment: '既然喜欢, 就统计听歌次数吧'
-    }
 }, {
-    tableName: 'love_songs',
+    tableName: 'songku_songs',
     timestamps: false
 })
 
 // 创建数据表
-// LoveSong.sync({ alter: true })
+// SongKuSong.sync({ alter: true })
 
-module.exports = LoveSong
+module.exports = SongKuSong

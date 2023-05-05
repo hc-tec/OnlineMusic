@@ -9,10 +9,7 @@ const userValidator = async (ctx, next) => {
     let { user_name = '', password = '' } = ctx.request.body
 
     // 合法性判断
-    user_name = user_name.replace(/\s+/g, '')
-    password = password.replace(/\s+/g, '')
-
-    if(!user_name || !password) {
+    if(!user_name || !password || user_name != user_name.replace(/\s+/g, '') || password != password.replace(/\s+/g, '')) {
         ctx.status = 400
         ctx.body = {
             code: '10001',
