@@ -2,36 +2,38 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const { hasUserByName, getUserInfoByName, querySongInfoById } = require('../service/user.service')
+const { isUserNameValid, isPasswordValid } = require('../utils/vaildCheck')
 // 中间件 在route请求中使用，满足一定条件调用next()，然后执行下一个中间件
+
 
 // 验证密码和账号的格式
 const userValidator = async (ctx, next) => {
-    let { user_name = '', password = '' } = ctx.request.body
+    let { user_name = '', password = '', old_password = '' } = ctx.request.body
 
     // 合法性判断
-    if(!user_name || !password || user_name != user_name.replace(/\s+/g, '') || password != password.replace(/\s+/g, '')) {
+    if(ctx.request.url != '/changePassword' && !isUserNameValid(user_name)) {
         ctx.status = 400
         ctx.body = {
             code: '10001',
-            message: '用户名或密码不能为空或包含空格',
+            message: '用户名不合法',
             result: ''
         }
         return
     }
-    else if(user_name.length > 7 || password.length > 12) {
+    else if(!isPasswordValid(password)) {
         ctx.status = 400
         ctx.body = {
             code: '10002',
-            message: '用户名或密码长度过大',
+            message: '密码不合法',
             result: ''
         }
         return
     }
-    else if(/[^0-9A-z]/g.test(password)) {
+    else if(ctx.request.url == '/changePassword' && !isPasswordValid(old_password)) {
         ctx.status = 400
         ctx.body = {
-            code: '10003',
-            message: '密码含非法字符',
+            code: '10002',
+            message: '密码不合法',
             result: ''
         }
         return

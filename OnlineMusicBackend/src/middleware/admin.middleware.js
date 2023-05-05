@@ -2,7 +2,7 @@ const fs = require('fs')
 
 const { getSingerInfo, getSongInfoBySingerId } = require('../service/admin.service')
 
-const isNameValid = require('../utils/isNameValid')
+const { isSongNameValid } = require('../utils/vaildCheck')
 
 // 是否有管理员权限
 const hasAdminPermission = async (ctx, next) => {
@@ -25,7 +25,7 @@ const verifySinger = async (ctx, next) => {
     // 日期处理
     birthday && (ctx.request.body.birthday = new Date(birthday))
 
-    if(!isNameValid(singer_name)) {
+    if(!isSongNameValid(singer_name)) {
         ctx.body = {
             code: '10016',
             message: '歌手名不合法',
@@ -57,7 +57,7 @@ const verifySong = async (ctx, next) => {
         }
         return
     }
-    else if(!isNameValid(song_name)) {
+    else if(!isSongNameValid(song_name)) {
         fs.existsSync(songFile.filepath) && fs.unlinkSync(songFile.filepath)
         ctx.body = {
             code: '10020',
@@ -142,7 +142,7 @@ const verifyChangeSong = async (ctx, next) => {
         return
     }
 
-    if(song_name && !isNameValid(song_name)) {
+    if(song_name && !isSongNameValid(song_name)) {
         ctx.body = {
             code: '10020',
             message: '歌曲名不合法',

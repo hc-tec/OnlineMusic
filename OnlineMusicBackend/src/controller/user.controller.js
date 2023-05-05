@@ -2,6 +2,7 @@ const path = require('path')
 const fs = require('fs')
 
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 
 const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment } = require('../service/user.service')
 const { updateSongById } = require('../service/admin.service')
@@ -50,8 +51,20 @@ class UserController {
     }
     // 修改密码
     async changePassword(ctx) {
-        const { id } = ctx.state.userInfo
-        const { password } = ctx.request.body
+        const { id, user_name } = ctx.state.userInfo
+        const { password, old_password } = ctx.request.body
+
+        const res = await getUserInfoByName(user_name)
+
+        if(!bcrypt.compareSync(old_password, res.password)) {
+            ctx.body = {
+                code: '10003',
+                message: '原密码错误',
+                result: ''
+            }
+            return
+        }
+
 
         if(await updateUserById({ id, password })) {
             ctx.body = {
