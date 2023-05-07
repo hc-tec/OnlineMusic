@@ -1,11 +1,12 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <HelloWorld/>
+  
+
 </template>
 
-<style lang="less">
+<script setup>
+
+</script>
+
+<style scoped lang="less">
 
 </style>

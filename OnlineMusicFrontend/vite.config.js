@@ -8,13 +8,12 @@ export default defineConfig({
   plugins: [vue()],
   css: {
     preprocessorOptions: {
-        less: {
-            modifyVars: {
-                hack: `true; @import (reference) "${path.resolve("src/assets/index.less")}";`,
-            },
-            javascriptEnabled: true,
+      less: {
+        modifyVars: {
+          hack: `true; @import (reference) "${path.resolve('src/style.less')}";`
         },
-    },
+        javascriptEnabled: true
+      }
+    }
   }
 })
-
