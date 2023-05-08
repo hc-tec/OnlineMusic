@@ -1,17 +1,42 @@
 <template>
   <div class="header-container">
+    <!-- logo -->
     <img class="logo" src="../assets/OnlineMusic.svg" alt="">
+    <!-- 导航栏 -->
+
+    <el-menu
+      :default-active="headerData.activeIndex"
+      class="el-menu-demo"
+      mode="horizontal"
+      :ellipsis="false"
+      @select="handleSelect"
+    >
+      <template v-if="!store.isAdmin">
+        <el-menu-item index="/">首页</el-menu-item>
+        <el-menu-item index="/loveSongs">我喜欢</el-menu-item>
+        <el-menu-item index="/historySongs">历史记录</el-menu-item>
+      </template>
+      <template v-else>
+        <el-menu-item index="/userManage">用户管理</el-menu-item>
+        <el-menu-item index="/singerManage">歌手管理</el-menu-item>
+        <el-menu-item index="/songManage">歌曲管理</el-menu-item>
+        <el-menu-item index="/songKuManage">歌单管理</el-menu-item>
+        <el-menu-item index="/commentManage">评论管理</el-menu-item>
+      </template>
+    </el-menu>
+
+    <!-- 搜索框和头像 -->
     <div class="search-and-avatar">
       <!-- 搜索框 -->
-      <el-input v-model="headerData.searchInput" class="search-input" placeholder="搜索音乐或歌手" clearable>
+      <el-input v-model="headerData.searchInput" class="search-input" placeholder="搜索音乐或歌手" clearable v-if="!store.isAdmin">
         <template #prefix>
-          <el-icon class="el-input__icon"><search/></el-icon>
+          <el-icon><search/></el-icon>
         </template>
       </el-input>
       <el-dropdown :hide-on-click="false">
         <span class="el-dropdown-link">
           <!-- 头像 -->
-          <el-avatar :size="36" src="">
+          <el-avatar :size="36" :src="store.avatarPath">
             <img
               src="../assets/unLogin.svg"
             />
@@ -21,7 +46,7 @@
           <el-dropdown-menu class="avatar-menu">
             <div v-if="store.isLogin">
               <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item divided>退出登录</el-dropdown-item>
+              <el-dropdown-item divided @click="exitLogin">退出登录</el-dropdown-item>
             </div>
             <div v-else>
               <el-dropdown-item @click="jumpToLogin">去登录</el-dropdown-item>
@@ -37,19 +62,34 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, computed } from 'vue';
 import { useStore } from '../pinia'
 import router from '../router';
+
 
 const store = useStore()
 
 
 const headerData = reactive({
-  searchInput: ''
+  searchInput: '',
 })
+
+headerData.activeIndex = computed(() => {
+  const res = router.currentRoute.value.fullPath.match('^/[A-z]*')
+  return res? res[0] : ''
+})
+
+// 标签页触发动作
+const handleSelect = (key, keyPath) => {
+  router.replace(key)
+  console.log(router.currentRoute.value.path);
+}
 
 const jumpToLogin = () => {
   router.push('/login')
+}
+const exitLogin = () => {
+  console.log('退出登录');
 }
 </script>
 
@@ -85,7 +125,7 @@ const jumpToLogin = () => {
 .search-input {
   width: 200px;
   margin-right: 20px;
-  & /deep/ .el-input__wrapper {
+  & :deep(.el-input__wrapper) {
     border-radius: 16px;
     .el-input__prefix {
       transition: .1s;
@@ -102,4 +142,23 @@ const jumpToLogin = () => {
 .user-name {
   padding-left: 8px;
 }
+.el-menu-demo {
+  border-bottom: none;
+  background-color: transparent;
+  .el-menu-item {
+    padding: 0 28px;
+  }
+}
+
+
+// 响应式
+@media screen and (max-width: 800px) {
+  .header-container {
+    padding: 0 10px;
+  }
+  .user-name {
+    display: none;
+  }
+}
+
 </style>

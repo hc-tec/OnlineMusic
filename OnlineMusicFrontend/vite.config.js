@@ -17,6 +17,9 @@ export default defineConfig({
       resolvers: [ElementPlusResolver()],
     })
   ],
+  define: {
+    __VUE_PROD_DEVTOOLS__: true,
+  },
   css: {
     preprocessorOptions: {
       less: {

@@ -309,6 +309,26 @@ class UserController {
             result: result
         }
     }
+    // 用户登录时获得头像
+    async getUserAvatar(ctx) {
+        const { user_name } = ctx.query
+        const res = await getUserInfoByName(user_name)
+        if(res) {
+            ctx.body = {
+                code: '0',
+                message: '获取头像成功',
+                result: res.avatar_path
+            }
+            return
+        }
+        ctx.body = {
+            code: '10005',
+            message: '用户不存在',
+            result: ''
+        }
+        return
+
+    }
 }
 
 module.exports = new UserController()
