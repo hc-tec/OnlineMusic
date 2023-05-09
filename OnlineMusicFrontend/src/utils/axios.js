@@ -13,18 +13,18 @@ axiosInstance.interceptors.request.use(
         return config
     }, 
     error => {
-        console.log(error);
+        // console.log(error);
         return Promise.reject(error)
     }
 )
 
 axiosInstance.interceptors.response.use(
     response => {
-        console.log(response);
+        // console.log(response);
         return response
     }, 
     error => {
-        console.log(error);
+        // console.log(error);
         return Promise.reject(error)
     }
 )

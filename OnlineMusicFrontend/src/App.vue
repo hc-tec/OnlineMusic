@@ -12,13 +12,49 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 import { useStore } from './pinia'
 import Header from './components/Header.vue'
 import NProgress from "nprogress";
 import "nprogress/nprogress.css"; 
+import axios from './utils/axios';
+import router from './router';
 
 NProgress.configure({ showSpinner: false })
 const store = useStore()
+
+// 自动登录
+onMounted(() => {
+  if(!localStorage.getItem('token')) return
+  axios.post('/autoLogin').then(res => {
+    if(res.data.code == 0) {
+      const userInfo = res.data.result.userInfo
+      // 同步数据
+      store.isLogin = true
+      store.isAdmin = userInfo.is_admin
+      store.userName = userInfo.user_name
+      store.avatarPath = `http://localhost:3000/avatar/${userInfo.avatar_path}`
+      if(store.isAdmin) {
+        router.replace('/userManage')
+      }
+      // else {
+      //   router.replace('/')
+      // }
+      ElMessage({
+        message: `欢迎您，${store.userName}`,
+        type: 'success'
+      })
+    }
+    else {
+      ElMessage({
+        message: `身份信息过期，请重新登录`,
+        type: 'warning'
+      })
+    }
+  }).catch(err => {
+    console.log(err);
+  })
+})
 
 </script>
 
@@ -35,5 +71,8 @@ const store = useStore()
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+.el-avatar > img{
+  width: 100%;
 }
 </style>

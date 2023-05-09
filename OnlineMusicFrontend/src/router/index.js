@@ -5,7 +5,11 @@ import NProgress from "nprogress";
 const MainPage = () => import('../pages/MainPage.vue')
 const Login = () => import('../pages/Login.vue')
 const Register = () => import('../pages/Register.vue')
+
 const UserCenter = () => import('../pages/UserCenter.vue')
+const ChangePassword = () => import('../pages/UserCenter/ChangePassword.vue')
+const ChangeAvatar = () => import('../pages/UserCenter/ChangeAvatar.vue')
+
 const LoveSongs = () => import('../pages/LoveSongs.vue')
 const HistorySongs = () => import('../pages/HistorySongs.vue')
 const UserManage = () => import('../pages/UserManage.vue')
@@ -36,7 +40,19 @@ const router = createRouter({
         },
         {
             path: '/userCenter',
-            component: UserCenter
+            component: UserCenter,
+            redirect: '/userCenter/changePassword',
+            children: [
+                {
+                    path: 'changePassword',
+                    component: ChangePassword,
+                },
+                {
+                    path: 'changeAvatar',
+                    component: ChangeAvatar,
+                }
+
+            ]
         },
         {
             path: '/loveSongs',
@@ -78,12 +94,11 @@ router.beforeEach((to, from, next) => {
         if(['/userManage', '/singerManage', '/songManage', '/songKuManage', '/commentManage'].includes(to.path)) {
             router.replace('/')
         }
-        else if(!store.isLogin && ['/historySongs', '/loveSongs', '/userCenter'].includes(to.path)) {
+        else if(!store.isLogin && ['/historySongs', '/loveSongs'].includes(to.path)) {
             router.replace('/login')
             ElMessage({
                 message: '请登录以使用此功能',
                 type: 'warning',
-                showClose: true
             })
         }
         else {

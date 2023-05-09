@@ -33,7 +33,7 @@
           <el-icon><search/></el-icon>
         </template>
       </el-input>
-      <el-dropdown :hide-on-click="false">
+      <el-dropdown>
         <span class="el-dropdown-link">
           <!-- 头像 -->
           <el-avatar :size="36" :src="store.avatarPath">
@@ -45,7 +45,7 @@
         <template #dropdown>
           <el-dropdown-menu class="avatar-menu">
             <div v-if="store.isLogin">
-              <el-dropdown-item>个人中心</el-dropdown-item>
+              <el-dropdown-item @click="jumpToUserCenter">个人中心</el-dropdown-item>
               <el-dropdown-item divided @click="exitLogin">退出登录</el-dropdown-item>
             </div>
             <div v-else>
@@ -66,10 +66,7 @@ import { reactive, computed } from 'vue';
 import { useStore } from '../pinia'
 import router from '../router';
 
-
 const store = useStore()
-
-
 const headerData = reactive({
   searchInput: '',
 })
@@ -82,14 +79,26 @@ headerData.activeIndex = computed(() => {
 // 标签页触发动作
 const handleSelect = (key, keyPath) => {
   router.replace(key)
-  console.log(router.currentRoute.value.path);
 }
 
 const jumpToLogin = () => {
   router.push('/login')
 }
+const jumpToUserCenter = () => {
+  router.push('/userCenter')
+}
 const exitLogin = () => {
-  console.log('退出登录');
+  localStorage.removeItem('token')
+  router.replace('/')
+  store.isLogin = false
+  store.isAdmin = false
+  store.avatarPath = ''
+  store.userName = ''
+
+  ElMessage({
+    message: `登出成功`,
+    type: 'success',
+  })
 }
 </script>
 
@@ -135,12 +144,15 @@ const exitLogin = () => {
     }
   }
 }
-.el-dropdown-link:hover {
-  cursor: pointer;
+.el-dropdown-link {
+  padding-right: 10px;
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .user-name {
-  padding-left: 8px;
+  font-weight: bold;
 }
 .el-menu-demo {
   border-bottom: none;

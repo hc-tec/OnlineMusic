@@ -12,7 +12,6 @@ const userValidator = async (ctx, next) => {
 
     // 合法性判断
     if(ctx.request.url != '/changePassword' && !isUserNameValid(user_name)) {
-        ctx.status = 400
         ctx.body = {
             code: '10001',
             message: '用户名不合法',
@@ -21,7 +20,6 @@ const userValidator = async (ctx, next) => {
         return
     }
     else if(!isPasswordValid(password)) {
-        ctx.status = 400
         ctx.body = {
             code: '10002',
             message: '密码不合法',
@@ -30,7 +28,6 @@ const userValidator = async (ctx, next) => {
         return
     }
     else if(ctx.request.url == '/changePassword' && !isPasswordValid(old_password)) {
-        ctx.status = 400
         ctx.body = {
             code: '10002',
             message: '密码不合法',
@@ -47,7 +44,6 @@ const verifyUser = async (ctx, next) => {
 
     if(await hasUserByName(user_name)) {
         // 合理性判断，即查找有无重复用户
-        ctx.status = 400
         ctx.body = {
             code: '10004',
             message: '用户已存在',
@@ -75,7 +71,6 @@ const verifyLogin = async (ctx, next) => {
     try {
         const res = await getUserInfoByName(user_name)
         if(!res) {
-            ctx.status = 400
             ctx.body = {
                 code: '10005',
                 message: '用户不存在',
@@ -85,7 +80,6 @@ const verifyLogin = async (ctx, next) => {
         }
         // 用户存在则比对密码
         if(!bcrypt.compareSync(password, res.password)) { // 密码不匹配
-            ctx.status = 400
             ctx.body = {
                 code: '10007',
                 message: '密码错误',
