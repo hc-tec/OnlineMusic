@@ -5,15 +5,22 @@ import NProgress from "nprogress";
 const MainPage = () => import('../pages/MainPage.vue')
 const Login = () => import('../pages/Login.vue')
 const Register = () => import('../pages/Register.vue')
-
+// 用户中心及其子路由
 const UserCenter = () => import('../pages/UserCenter.vue')
 const ChangePassword = () => import('../pages/UserCenter/ChangePassword.vue')
 const ChangeAvatar = () => import('../pages/UserCenter/ChangeAvatar.vue')
+// 歌手管理及其子路由
+const SingerManage = () => import('../pages/SingerManage.vue')
+const AddSinger = () => import('../pages/SingerManage/AddSinger.vue')
+const EditSinger = () => import('../pages/SingerManage/EditSinger.vue')
+const ViewSinger = () => import('../pages/SingerManage/ViewSinger.vue')
+const AddSong = () => import('../pages/SingerManage/AddSong.vue')
+
 
 const LoveSongs = () => import('../pages/LoveSongs.vue')
 const HistorySongs = () => import('../pages/HistorySongs.vue')
 const UserManage = () => import('../pages/UserManage.vue')
-const SingerManage = () => import('../pages/SingerManage.vue')
+
 const SongManage = () => import('../pages/SongManage.vue')
 const SongKuManage = () => import('../pages/SongKuManage.vue')
 const CommentManage = () => import('../pages/CommentManage.vue')
@@ -68,7 +75,26 @@ const router = createRouter({
         },
         {
             path: '/singerManage',
-            component: SingerManage
+            component: SingerManage,
+            redirect: '/singerManage/viewSinger',
+            children: [
+                {
+                    path: 'viewSinger',
+                    component: ViewSinger
+                },
+                {
+                    path: 'addSinger',
+                    component: AddSinger
+                },
+                {
+                    path: 'editSinger',
+                    component: EditSinger
+                },
+                {
+                    path: 'addSong',
+                    component: AddSong
+                }
+            ]
         },
         {
             path: '/songManage',
@@ -90,28 +116,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     NProgress.start()
     const store = useStore()
-    if(!store.isAdmin) {
-        if(['/userManage', '/singerManage', '/songManage', '/songKuManage', '/commentManage'].includes(to.path)) {
-            router.replace('/')
-        }
-        else if(!store.isLogin && ['/historySongs', '/loveSongs'].includes(to.path)) {
-            router.replace('/login')
-            ElMessage({
-                message: '请登录以使用此功能',
-                type: 'warning',
-            })
-        }
-        else {
-            next()
-        }
+    if(store.isAdmin && to.path == '/') {
+        router.replace('/userManage')
     }
     else {
-        if(to.path == '/'){
-            router.replace('/userManage')
-        }
-        else {
-            next()
-        }
+        next()
     }
 })
 

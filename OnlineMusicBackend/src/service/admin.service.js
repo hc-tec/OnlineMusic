@@ -1,5 +1,6 @@
 const Singer = require('../model/singer.model')
 const Song = require('../model/song.model')
+const User = require('../model/user.model')
 
 class AdminService {
     // 创建歌手
@@ -74,6 +75,20 @@ class AdminService {
         const res = await Song.update(newValue, { where: whereOpt })
 
         return !!res[0]
+    }
+    // 获取所有用户信息
+    async queryAllUsers() {
+        const res = await User.findAll({
+            attributes: ['id', 'avatar_path', 'is_admin', 'user_name'],
+        })
+        return res
+    }
+    // 根据用户ID删除用户
+    async deleteUserById(id) {
+        const res = await User.destroy({
+            where: { id }
+        })
+        return res
     }
 
 

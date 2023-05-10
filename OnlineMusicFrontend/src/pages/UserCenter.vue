@@ -46,7 +46,8 @@ const handleSelect = (key, keyPath) => {
   width: 70%;
   max-width: 800px;
   min-width: 600px;
-  height: 90%;
+  min-height: 400px;
+  height: 80%;
   display: flex;
   flex-direction: row;
   justify-content: center;

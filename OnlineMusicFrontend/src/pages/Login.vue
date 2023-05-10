@@ -96,7 +96,7 @@ const handleBlur = () => {
 const jumpToRegister = () => {
   router.push('/register')
 }
-// 登录, 执行store中的登录方法
+// 登录
 const login = () => {
   axios.post('/login', {
     user_name: loginData.userName,
@@ -149,7 +149,6 @@ const login = () => {
 
 }
 .logo-avatar {
-  transition: 3s;
   .el-avatar {
     background: none;
   }
@@ -182,5 +181,4 @@ const login = () => {
     width: 50px;
   }
 }
-
 </style>

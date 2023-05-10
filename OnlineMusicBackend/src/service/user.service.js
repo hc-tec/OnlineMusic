@@ -3,6 +3,7 @@ const Song = require('../model/song.model')
 const User = require('../model/user.model')
 const HistorySong = require('../model/historySong.model')
 const Comment = require('../model/comment.model')
+const Singer = require('../model/singer.model')
 
 class UserService {
 
@@ -112,6 +113,13 @@ class UserService {
     // 删除评论
     async deleteComment(id) {
         return await Comment.destroy({ where: { id } })
+    }
+    // 查询所有歌手信息
+    async queryAllSingers() {
+        const res = await Singer.findAll({
+            attributes: ['id', 'singer_name', 'birthday', 'gender', 'description'],
+        })
+        return res
     }
 }
  

@@ -105,6 +105,8 @@ const exitLogin = () => {
 <style scoped lang="less">
 
 .header-container {
+  z-index: 99;
+  animation: opacity-from-to .5s;
   box-sizing: border-box;
   padding: 0 30px;
   position: fixed;
@@ -153,6 +155,7 @@ const exitLogin = () => {
 
 .user-name {
   font-weight: bold;
+  animation: opacity-from-to 1s;
 }
 .el-menu-demo {
   border-bottom: none;

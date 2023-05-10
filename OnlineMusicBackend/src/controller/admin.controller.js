@@ -1,7 +1,9 @@
 const path = require('path')
 const fs = require('fs')
+const bcrypt = require('bcryptjs')
 
-const { createSinger, updateSingerById, createSong, updateSongById } = require('../service/admin.service')
+const { createSinger, updateSingerById, createSong, updateSongById, queryAllUsers, deleteUserById } = require('../service/admin.service')
+const { updateUserById } = require('../service/user.service')
 
 class AdminController {
     async addSinger(ctx) {
@@ -94,7 +96,58 @@ class AdminController {
                 result: ''
             }
         }
-
+    }
+    // 获得所有用户的信息
+    async getAllUsers(ctx) {
+        const res = await queryAllUsers()
+        ctx.body = {
+            code: '0',
+            message: '获取用户信息成功',
+            result: res
+        }
+    }
+    // 重置用户密码
+    async resetPassword(ctx) {
+        const { id } = ctx.request.body
+        const salt = bcrypt.genSaltSync(10)
+        const hash = bcrypt.hashSync('123456', salt)
+        const res = await updateUserById({ id: id, password: hash })
+        if(res) {
+            ctx.body = {
+                code: '0',
+                message: '重置密码成功',
+                result: id
+            }
+            return
+        }
+        ctx.body = {
+            code: '10037',
+            message: '重置密码失败',
+            result: ''
+        }
+    }
+    // 删除用户
+    async deleteUser(ctx) {
+        const { id, avatar_path } = ctx.request.body
+        const oldAvatarPath = path.join(__dirname, '../../upload/avatar', avatar_path)
+        // 删除头像
+        if(avatar_path !== 'defaultAvatar.jpg' && fs.existsSync(oldAvatarPath)) {
+            fs.unlinkSync(oldAvatarPath)
+        }
+        const res  = await deleteUserById(id)
+        if(res) {
+            ctx.body = {
+                code: '0',
+                message: '删除用户成功',
+                result: res
+            }
+            return
+        }
+        ctx.body = {
+            code: '10038',
+            message: '删除用户失败',
+            result: ''
+        }
     }
 }
 

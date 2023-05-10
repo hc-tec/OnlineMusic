@@ -4,7 +4,7 @@ const fs = require('fs')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
-const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment } = require('../service/user.service')
+const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment, queryAllSingers } = require('../service/user.service')
 const { updateSongById } = require('../service/admin.service')
 
 // 将执行某个请求的操作写在controller文件夹下
@@ -328,6 +328,15 @@ class UserController {
         }
         return
 
+    }
+    // 获得所有歌手信息
+    async getAllSingers(ctx) {
+        const res = await queryAllSingers()
+        ctx.body = {
+            code: '0',
+            message: '获取歌手信息成功',
+            result: res
+        }
     }
 }
 

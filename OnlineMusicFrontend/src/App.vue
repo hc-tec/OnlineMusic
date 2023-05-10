@@ -18,7 +18,6 @@ import Header from './components/Header.vue'
 import NProgress from "nprogress";
 import "nprogress/nprogress.css"; 
 import axios from './utils/axios';
-import router from './router';
 
 NProgress.configure({ showSpinner: false })
 const store = useStore()
@@ -34,12 +33,6 @@ onMounted(() => {
       store.isAdmin = userInfo.is_admin
       store.userName = userInfo.user_name
       store.avatarPath = `http://localhost:3000/avatar/${userInfo.avatar_path}`
-      if(store.isAdmin) {
-        router.replace('/userManage')
-      }
-      // else {
-      //   router.replace('/')
-      // }
       ElMessage({
         message: `欢迎您，${store.userName}`,
         type: 'success'
@@ -74,5 +67,14 @@ onMounted(() => {
 }
 .el-avatar > img{
   width: 100%;
+}
+
+@keyframes opacity-from-to {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>
