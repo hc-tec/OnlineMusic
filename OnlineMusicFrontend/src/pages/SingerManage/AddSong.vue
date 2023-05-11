@@ -112,8 +112,8 @@ onMounted(() => {
   font-size: 18px;
   span {
     position: relative;
-    opacity: .7;
-    border-radius: 8px;
+    opacity: .8;
+    border-radius: 6px;
     padding: 0 5px;
     margin: 0 5px;
     display: inline-block;
@@ -125,7 +125,7 @@ onMounted(() => {
       position: absolute;
       left: 0;
       top: 0;
-      border-radius: 8px;
+      border-radius: 6px;
       background-color: @main-color;
       opacity: .3;
     }
