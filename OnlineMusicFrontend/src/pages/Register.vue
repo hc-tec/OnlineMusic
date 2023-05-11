@@ -56,16 +56,16 @@ registerData.canRegister = computed(() => {
 
 const handleInput = (el) => {
   if (el == 'userName') {
-    registerData.userName = registerData.userName.replace(/[^\u4e00-\u9fa5A-z0-9]|_|`|\\/g, '')
+    registerData.userName = registerData.userName.replace(/[^\u4e00-\u9fa5A-z0-9]|[\^\\_\[\]`]/g, '')
     if(registerData.userName == '') {
       registerData.avatarUrl = ''
     }
   }
   else if(el == 'password') {
-    registerData.password = registerData.password.replace(/[^A-z0-9/]|_|`|\\/g, '')
+    registerData.password = registerData.password.replace(/[^A-z0-9/]|[\^\\_\[\]`]/g, '')
   }
   else {
-    registerData.password2 = registerData.password2.replace(/[^A-z0-9/]|_|`|\\/g, '')
+    registerData.password2 = registerData.password2.replace(/[^A-z0-9/]|[\^\\_\[\]`]/g, '')
   }
 }
 

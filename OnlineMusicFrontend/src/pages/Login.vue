@@ -60,13 +60,13 @@ loginData.canLogin = computed(() => {
 
 const handleInput = (el) => {
   if (el == 'userName') {
-    loginData.userName = loginData.userName.replace(/[^\u4e00-\u9fa5A-z0-9]|_|`|\\/g, '')
+    loginData.userName = loginData.userName.replace(/[^\u4e00-\u9fa5A-z0-9]|[\^\\_\[\]`]/g, '')
     if(loginData.userName == '') {
       loginData.avatarUrl = ''
     }
   }
   else {
-    loginData.password = loginData.password.replace(/[^A-z0-9/]|_|`|\\/g, '')
+    loginData.password = loginData.password.replace(/[^A-z0-9/]|[\^\\_\[\]`]/g, '')
   }
 }
 

@@ -10,7 +10,7 @@
 
       <template #default="scope">
         <el-button type="primary" circle @click="editSinger(scope.row)"><el-icon><Edit /></el-icon></el-button>
-        <el-button type="success" circle plain><el-icon><Plus /></el-icon></el-button>
+        <el-button type="success" circle plain @click="addSong(scope.row.id, scope.row.singer_name)"><el-icon><Plus /></el-icon></el-button>
         <el-button type="danger" circle plain><el-icon><Delete /></el-icon></el-button>
       </template>
 
@@ -42,7 +42,12 @@ const editSinger = (singerInfo) => {
     query: {id, singer_name, gender, birthday, description}
   })
 }
-
+const addSong = (id, singer_name) => {
+  router.replace({
+    path: '/singerManage/addSong',
+    query: { id, singer_name }
+  })
+}
 const handleGender = (str) => {
   if (str === true) return '男'
   else if (str === false) return '女'

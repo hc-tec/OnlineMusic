@@ -77,7 +77,7 @@ onMounted(() => {
 // 歌手名字格式（仅能为中文英文和空格，首位不能有任意位空格，中间不能有超过一位的空格）
 const handleInput = () => {
   let temp = data.singer_name
-  temp = temp.replace(/[^\u4e00-\u9fa5A-z\s]|_|`|\\/g, '').trim()
+  temp = temp.replace(/[^\u4e00-\u9fa5A-z\s]|[\^\\_\[\]`]/g, '').trim()
   data.singer_name = temp.replace(/[\s]{2,}/g, ' ')
 }
 
