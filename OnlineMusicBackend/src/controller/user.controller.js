@@ -30,7 +30,7 @@ class UserController {
             message: '登录成功',
             // 通过私钥（自定义）生成token, 过期时间一天
             result: {
-                token: jwt.sign({ id, user_name, is_admin }, 'BINJUR', { expiresIn: '1d' }),
+                token: jwt.sign({ id, user_name, is_admin }, 'BINJUR', { expiresIn: '10d' }),
                 userInfo: { id, user_name, is_admin, avatar_path }
             }
         }

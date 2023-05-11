@@ -21,7 +21,7 @@ const hasAdminPermission = async (ctx, next) => {
 }
 // 验证添加 修改歌手时的参数
 const verifySinger = async (ctx, next) => {
-    const { singer_name, birthday } = ctx.request.body
+    const { id, singer_name, birthday } = ctx.request.body
     // 日期处理
     birthday && (ctx.request.body.birthday = new Date(birthday))
 
@@ -40,6 +40,17 @@ const verifySinger = async (ctx, next) => {
             result: ''
         }
         return
+    }
+    else if (ctx.request.url == '/changeSinger') {
+        const res = await getSingerInfo({ singer_name })
+        if (res && res.id != id) {
+            ctx.body = {
+                code: '10017',
+                message: '歌手已存在',
+                result: ''
+            }
+            return
+        }
     }
 
     await next()

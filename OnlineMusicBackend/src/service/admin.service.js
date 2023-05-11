@@ -23,13 +23,10 @@ class AdminService {
         let newValue = {}
         const whereOpt = { id }
 
-        singer_name && (newValue.singer_name = singer_name)
-        birthday && (newValue.birthday = birthday)
-        description && (newValue.description = description)
-
-        if(gender != undefined && gender != null) {
-            newValue.gender = gender
-        }
+        newValue.singer_name = singer_name
+        newValue.birthday = birthday != undefined ? birthday : null
+        newValue.gender = gender != undefined ? gender : null
+        newValue.description = description != undefined ? description : null
 
         const res = await Singer.update(newValue, { where: whereOpt })
         return !!res[0]

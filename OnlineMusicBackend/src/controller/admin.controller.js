@@ -11,7 +11,7 @@ class AdminController {
         
         const res = await createSinger({ singer_name, birthday, gender, description })
         ctx.body = {
-            code: '10018',
+            code: '0',
             message: '歌手添加成功',
             result: res
         }

@@ -63,6 +63,7 @@ const handleSelect = (key, keyPath) => {
   }
 
   .content {
+    position: relative;
     overflow: hidden;
     height: 100%;
     flex: 1;
