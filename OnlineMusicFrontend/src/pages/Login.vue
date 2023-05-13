@@ -60,13 +60,13 @@ loginData.canLogin = computed(() => {
 
 const handleInput = (el) => {
   if (el == 'userName') {
-    loginData.userName = loginData.userName.replace(/[^\u4e00-\u9fa5A-z0-9]|[\^\\_\[\]`]/g, '')
+    loginData.userName = loginData.userName.replace(/[^\u4e00-\u9fa5A-Za-z0-9]/g, '')
     if(loginData.userName == '') {
       loginData.avatarUrl = ''
     }
   }
   else {
-    loginData.password = loginData.password.replace(/[^A-z0-9/]|[\^\\_\[\]`]/g, '')
+    loginData.password = loginData.password.replace(/[^A-Za-z0-9]/g, '')
   }
 }
 
@@ -77,7 +77,7 @@ const handleBlur = () => {
     if(res.data.code == 0) {
       // 获取成功
       loginData.userExist = true
-      loginData.avatarUrl = `http://localhost:3000/avatar/${res.data.result}`
+      loginData.avatarUrl = `${import.meta.env.VITE_HOSTPORT}/avatar/${res.data.result}`
     }
     else {
       loginData.userExist = false
@@ -109,7 +109,7 @@ const login = () => {
       store.isLogin = true
       store.isAdmin = userInfo.is_admin
       store.userName = userInfo.user_name
-      store.avatarPath = `http://localhost:3000/avatar/${userInfo.avatar_path}`
+      store.avatarPath = `${import.meta.env.VITE_HOSTPORT}/avatar/${userInfo.avatar_path}`
       // 存储token
       localStorage.setItem('token', token)
       if(store.isAdmin) {

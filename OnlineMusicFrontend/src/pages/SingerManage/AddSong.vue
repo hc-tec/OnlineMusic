@@ -93,7 +93,7 @@ const songChange = (file) => {
 }
 const handleInput = () => {
   let temp = data.song_name
-  temp = temp.replace(/[^\u4e00-\u9fa5A-z\s]|[\^\\_\[\]`]/g, '').trim()
+  temp = temp.replace(/[^\u4e00-\u9fa5A-Za-z\s]/g, '').trim()
   data.song_name = temp.replace(/[\s]{2,}/g, ' ')
 }
 onMounted(() => {

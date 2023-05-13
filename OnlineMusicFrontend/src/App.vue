@@ -32,7 +32,7 @@ onMounted(() => {
       store.isLogin = true
       store.isAdmin = userInfo.is_admin
       store.userName = userInfo.user_name
-      store.avatarPath = `http://localhost:3000/avatar/${userInfo.avatar_path}`
+      store.avatarPath = `${import.meta.env.VITE_HOSTPORT}/avatar/${userInfo.avatar_path}`
       ElMessage({
         message: `欢迎您，${store.userName}`,
         type: 'success'

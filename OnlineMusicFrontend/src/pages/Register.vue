@@ -56,16 +56,16 @@ registerData.canRegister = computed(() => {
 
 const handleInput = (el) => {
   if (el == 'userName') {
-    registerData.userName = registerData.userName.replace(/[^\u4e00-\u9fa5A-z0-9]|[\^\\_\[\]`]/g, '')
+    registerData.userName = registerData.userName.replace(/[^\u4e00-\u9fa5A-Za-z0-9]/g, '')
     if(registerData.userName == '') {
       registerData.avatarUrl = ''
     }
   }
   else if(el == 'password') {
-    registerData.password = registerData.password.replace(/[^A-z0-9/]|[\^\\_\[\]`]/g, '')
+    registerData.password = registerData.password.replace(/[^A-Za-z0-9]/g, '')
   }
   else {
-    registerData.password2 = registerData.password2.replace(/[^A-z0-9/]|[\^\\_\[\]`]/g, '')
+    registerData.password2 = registerData.password2.replace(/[^A-Za-z0-9]/g, '')
   }
 }
 
@@ -104,7 +104,7 @@ const register = () => {
           store.isLogin = true
           store.isAdmin = userInfo.is_admin
           store.userName = userInfo.user_name
-          store.avatarPath = `http://localhost:3000/avatar/${userInfo.avatar_path}`
+          store.avatarPath = `${import.meta.env.VITE_HOSTPORT}/avatar/${userInfo.avatar_path}`
           // 存储token
           localStorage.setItem('token', token)
           router.replace('/')

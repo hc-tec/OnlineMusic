@@ -59,7 +59,7 @@ const saveChange = () => {
   })
   .then(res => {
     if(res.data.code == 0) {
-      store.avatarPath = `http://localhost:3000/avatar/${res.data.result.newAvatarName}`
+      store.avatarPath = `${import.meta.env.VITE_HOSTPORT}/avatar/${res.data.result.newAvatarName}`
       ElMessage.success('头像更新成功')
       data.canSave = false
     }

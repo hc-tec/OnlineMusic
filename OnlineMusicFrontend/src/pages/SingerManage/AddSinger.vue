@@ -56,7 +56,7 @@ const data = reactive({
 
 const handleInput = () => {
   let temp = data.singer_name
-  temp = temp.replace(/[^\u4e00-\u9fa5A-z\s]|[\^\\_\[\]`]/g, '').trim()
+  temp = temp.replace(/[^\u4e00-\u9fa5A-Za-z\s]/g, '').trim()
   data.singer_name = temp.replace(/[\s]{2,}/g, ' ')
 }
 

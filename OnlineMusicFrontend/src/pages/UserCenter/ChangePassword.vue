@@ -33,10 +33,10 @@ changePasswordData.canChange = computed(() => {
 
 const handleInput = (el) => {
   if (el == 'oldPassword') {
-    changePasswordData.oldPassword = changePasswordData.oldPassword.replace(/[^A-z0-9/]|[\^\\_\[\]`]/g, '')
+    changePasswordData.oldPassword = changePasswordData.oldPassword.replace(/[^A-Za-z0-9]/g, '')
   }
   else {
-    changePasswordData.password = changePasswordData.password.replace(/[^A-z0-9/]|[\^\\_\[\]`]/g, '')
+    changePasswordData.password = changePasswordData.password.replace(/[^A-Za-z0-9]/g, '')
   }
 }
 
