@@ -121,6 +121,24 @@ class UserService {
         })
         return res
     }
+    // 查询所有歌曲信息
+    async queryAllSongs(includeLyric) {
+        let attributes = ['id', 'song_name', 'singer_id', 'publish_time', 'file_name', 'visitors']
+        if(includeLyric) attributes.push('lyric')
+
+        const res = await Song.findAll({ attributes })
+        return res
+    }
+    // 根据歌曲ID获得歌曲信息
+    async getSongInfoById(id) {
+        const res = await Song.findOne({
+            attributes: ['id', 'song_name', 'singer_id', 'publish_time', 'file_name', 'visitors', 'lyric'],
+            where: {
+                id: id
+            }
+        })
+        return res ? res.dataValues : null
+    }
 }
  
 module.exports = new UserService()

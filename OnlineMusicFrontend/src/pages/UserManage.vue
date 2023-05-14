@@ -10,16 +10,16 @@
         <template #default="scope">
           <el-image
             class="avatar-image"
-            :src="`http://localhost:3000/avatar/${scope.row.avatar_path}`"
+            :src="`${data.VITE_HOSTPORT}/avatar/${scope.row.avatar_path}`"
             fit="cover"
             @click="showLargeImage(scope.row.avatar_path)"
           />
         </template>
       </el-table-column>
-      <el-table-column prop="id" label="编号"  />
+      <el-table-column prop="id" label="编号" />
       <el-table-column prop="user_name" label="用户名" />
       <el-table-column prop="is_admin" label="身份" />
-      <el-table-column width="200">
+      <el-table-column width="200" >
         <template #header>
           <el-input v-model="data.searchInput" class="search-input" placeholder="搜索用户" maxLength="7">
             <template #prefix>
@@ -51,19 +51,20 @@ import axios from '../utils/axios'
 const store = useStore()
 
 const data = reactive({
-  UserList: [],
+  userList: [],
   searchInput: '',
   currentImageUrl: '',
-  imageVisible: false
+  imageVisible: false,
+  VITE_HOSTPORT: import.meta.env.VITE_HOSTPORT
 })
 
 const filterTableData = computed(() => {
-  return data.UserList.filter(item => {
+  return data.userList.filter(item => {
     return !data.searchInput || item.user_name.toLowerCase().includes(data.searchInput.toLowerCase())
   })
 })
 const showLargeImage = (url) => {
-  data.currentImageUrl = `http://localhost:3000/avatar/${url}`
+  data.currentImageUrl = `${import.meta.env.VITE_HOSTPORT}/avatar/${url}`
   data.imageVisible = true
 }
 // 重置用户密码为123456
@@ -94,10 +95,10 @@ const deleteUser = (id, user_name, avatar_path) => {
   .then(() => {
     axios.post('/deleteUser', {id, avatar_path}).then(res => {
       if(res.data.code == 0) {
-        for (let index = 0; index < data.UserList.length; index++) {
-          const element = data.UserList[index];
+        for (let index = 0; index < data.userList.length; index++) {
+          const element = data.userList[index];
           if(element.id == id) {
-            data.UserList.splice(index, 1)
+            data.userList.splice(index, 1)
             break;
           }
         }
@@ -118,7 +119,7 @@ onMounted(() => {
     axios.get('getAllUsers').then(res => {
       if(res.data.code == 0) {
         for (const userInfo of res.data.result) {
-          data.UserList.push({
+          data.userList.push({
             avatar_path: userInfo.avatar_path,
             id: userInfo.id,
             user_name: userInfo.user_name,

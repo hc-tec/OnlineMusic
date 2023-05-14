@@ -4,7 +4,7 @@ const fs = require('fs')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
-const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment, queryAllSingers } = require('../service/user.service')
+const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment, queryAllSingers, queryAllSongs, getSongInfoById } = require('../service/user.service')
 const { updateSongById } = require('../service/admin.service')
 
 // 将执行某个请求的操作写在controller文件夹下
@@ -336,6 +336,57 @@ class UserController {
             code: '0',
             message: '获取歌手信息成功',
             result: res
+        }
+    }
+    // 获得简易的歌曲信息，不包括歌词，并将歌手id查询歌手名
+    async getAllSongsSimpleInfo(ctx) {
+        try {
+            let songSimpleInfo = await queryAllSongs(false)
+            const singerInfo = await queryAllSingers()
+
+            songSimpleInfo = songSimpleInfo.map(songInfo => {        
+                const singer_id = songInfo.singer_id
+                let singer_name = 's'
+                for (const iterator of singerInfo) {
+                    if(iterator.id == singer_id) {
+                        singer_name = iterator.singer_name
+                        break
+                    }
+                    else { continue }
+                }
+                return { songInfo, singer_name }
+            })
+            ctx.body = {
+                code: '',
+                message: '获取歌曲信息成功',
+                result: songSimpleInfo
+            }
+        }
+        catch (error) {
+            ctx.body = {
+                code: '10039',
+                message: '获取歌曲信息失败',
+                result: ''
+            }
+        }
+    }
+    // 编辑歌曲时获得歌词，歌词文本过大
+    async getSongLyric(ctx) {
+        const { id } = ctx.query
+        try {
+            const { lyric } = await getSongInfoById(id)
+            ctx.body = {
+                code: '0',
+                message: '获取歌曲歌词成功',
+                result: lyric
+            }
+        }
+        catch (error) {
+            ctx.body = {
+                code: '10040',
+                message: '获取歌曲歌词失败',
+                result: ''
+            }
         }
     }
 }

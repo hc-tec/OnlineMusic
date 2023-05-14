@@ -15,13 +15,16 @@ const AddSinger = () => import('../pages/SingerManage/AddSinger.vue')
 const EditSinger = () => import('../pages/SingerManage/EditSinger.vue')
 const ViewSinger = () => import('../pages/SingerManage/ViewSinger.vue')
 const AddSong = () => import('../pages/SingerManage/AddSong.vue')
-
+// 歌曲管理及其子路由
+const SongManage = () => import('../pages/SongManage.vue')
+const ViewSong = () => import('../pages/SongManage/ViewSong.vue')
+const EditSong = () => import('../pages/SongManage/EditSong.vue')
 
 const LoveSongs = () => import('../pages/LoveSongs.vue')
 const HistorySongs = () => import('../pages/HistorySongs.vue')
 const UserManage = () => import('../pages/UserManage.vue')
 
-const SongManage = () => import('../pages/SongManage.vue')
+
 const SongKuManage = () => import('../pages/SongKuManage.vue')
 const CommentManage = () => import('../pages/CommentManage.vue')
 
@@ -32,6 +35,16 @@ const router = createRouter({
         {
             path: '/',
             component: MainPage,
+            beforeEnter:(to, from, next) => {
+                const store = useStore()
+                if(store.isAdmin) {
+                    router.replace('/userManage')
+                }
+                else {
+                    next()
+                }
+                
+            }
         },
         {
             path: '/index',
@@ -98,7 +111,18 @@ const router = createRouter({
         },
         {
             path: '/songManage',
-            component: SongManage
+            component: SongManage,
+            redirect: '/songManage/viewSong',
+            children: [
+                {
+                    path: 'viewSong',
+                    component: ViewSong
+                },
+                {
+                    path: 'editSong',
+                    component: EditSong
+                }
+            ]
         },
         {
             path: '/songKuManage',
@@ -115,13 +139,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     NProgress.start()
-    const store = useStore()
-    if(store.isAdmin && to.path == '/') {
-        router.replace('/userManage')
-    }
-    else {
-        next()
-    }
+    next()
 })
 
 router.afterEach((to, from, next) => {

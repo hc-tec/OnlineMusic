@@ -141,7 +141,7 @@ const verifySong = async (ctx, next) => {
 }
 // 验证修改歌曲信息时的参数文件
 const verifyChangeSong = async (ctx, next) => {
-    const { id, song_name } = ctx.request.body
+    const { id, song_name, singer_id } = ctx.request.body
     const songFile = ctx.request.files.file
 
     if(!id) {
@@ -183,6 +183,23 @@ const verifyChangeSong = async (ctx, next) => {
         }
     }
 
+    // 继续验证歌曲名是否重复
+    const resArr = await getSongInfoBySingerId(singer_id)
+    if(resArr.length) {
+        // 检测歌手是否有同名的歌曲
+        const hasExistSong = resArr.find((item) => {
+            return item.song_name == song_name && item.id != id
+        })
+        if(hasExistSong) {
+            songFile && fs.existsSync(songFile.filepath) && fs.unlinkSync(songFile.filepath)
+            ctx.body = {
+                code: '10025',
+                message: '该歌手下相同名称的歌曲已存在',
+                result: ''
+            }
+            return
+        }
+    }
     await next()
 }
 

@@ -1,6 +1,6 @@
 const Router = require('koa-router')
 
-const { register, login, changePassword, changeAvatar, autoLogin, addLoveSong, deleteLoveSong, listenSong, addComment, deleteComment, getUserAvatar, getAllSingers } = require('../controller/user.controller')
+const { register, login, changePassword, changeAvatar, autoLogin, addLoveSong, deleteLoveSong, listenSong, addComment, deleteComment, getUserAvatar, getAllSingers, getAllSongsSimpleInfo, getSongLyric } = require('../controller/user.controller')
 const { userValidator, verifyUser, cryptPassword, verifyLogin, auth, verifySongIdExist } = require('../middleware/user.middleware')
 
 const router = new Router()
@@ -30,6 +30,10 @@ router.post('/deleteComment', auth, verifySongIdExist, deleteComment)
 router.get('/getUserAvatar', getUserAvatar)
 
 router.get('/getAllSingers', getAllSingers)
+
+router.get('/getAllSongsSimpleInfo', getAllSongsSimpleInfo)
+
+router.get('/getSongLyric', getSongLyric)
 
 module.exports = router
 

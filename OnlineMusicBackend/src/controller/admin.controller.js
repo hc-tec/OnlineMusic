@@ -80,7 +80,12 @@ class AdminController {
         }
 
         if(song_name) newValue.song_name = song_name
-        if(lyric) newValue.lyric = lyric
+        if(lyric) {
+            newValue.lyric = lyric
+        }
+        else {
+            newValue.lyric = '纯音乐，请欣赏'
+        }
 
         if(await updateSongById(newValue)) {
             ctx.body = {
