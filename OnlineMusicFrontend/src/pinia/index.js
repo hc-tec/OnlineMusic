@@ -8,6 +8,7 @@ const useStore = defineStore('main', {
         isAdmin: false,
         userName: '',
         avatarPath: '',
+        routerPath: '/',
     }),
 
     actions: {
