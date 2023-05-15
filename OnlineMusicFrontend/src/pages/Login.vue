@@ -107,6 +107,7 @@ const login = () => {
       const userInfo = res.data.result.userInfo
       const token = res.data.result.token
       // 同步数据
+      store.id = userInfo.id
       store.isLogin = true
       store.isAdmin = userInfo.is_admin
       store.userName = userInfo.user_name

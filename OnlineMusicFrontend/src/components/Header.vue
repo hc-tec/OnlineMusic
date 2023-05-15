@@ -37,9 +37,7 @@
         <span class="el-dropdown-link">
           <!-- 头像 -->
           <el-avatar :size="36" :src="store.avatarPath">
-            <img
-              src="../assets/unLogin.svg"
-            />
+            <img src="../assets/unLogin.svg" />
           </el-avatar>
         </span>
         <template #dropdown>

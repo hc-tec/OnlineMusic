@@ -4,7 +4,7 @@ const fs = require('fs')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
-const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment, queryAllSingers, queryAllSongs, getSongInfoById } = require('../service/user.service')
+const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment, queryAllSingers, queryAllSongs, querySongInfoById, queryUserCommentState, getUserInfoById } = require('../service/user.service')
 const { updateSongById } = require('../service/admin.service')
 
 // 将执行某个请求的操作写在controller文件夹下
@@ -374,7 +374,7 @@ class UserController {
     async getSongLyric(ctx) {
         const { id } = ctx.query
         try {
-            const { lyric } = await getSongInfoById(id)
+            const { lyric } = await querySongInfoById(id)
             ctx.body = {
                 code: '0',
                 message: '获取歌曲歌词成功',
@@ -388,6 +388,39 @@ class UserController {
                 result: ''
             }
         }
+    }
+    // 获得某歌曲下所有评论，如果是登录状态，还可获取点赞状态
+    async getComment(ctx) {
+        const { id, user_id } = ctx.query
+
+        const res = await queryCommentInfo({ song_id: id })
+        if(!res.length) {
+            ctx.body = {
+                code: '10043',
+                message: '该歌曲无评论信息',
+                result: ''
+            }
+            return
+        }
+
+        // 根据评论用户id 和 登录用户id完善信息
+        for await (const item of res) {
+            const userInfo = await getUserInfoById(item.user_id)
+            item.dataValues.user_name = userInfo.user_name
+            item.dataValues.avatar_path = userInfo.avatar_path
+
+            if (user_id) {
+                const has_zan = await queryUserCommentState({ user_id, comment_id: item.id })
+                item.dataValues.has_zan = has_zan
+            }
+        }
+
+        ctx.body = {
+            code: '0',
+            message: '获取评论信息和点赞状态成功',
+            result: res
+        }
+
     }
 }
 

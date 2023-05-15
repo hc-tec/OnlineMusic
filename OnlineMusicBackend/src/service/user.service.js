@@ -4,7 +4,7 @@ const User = require('../model/user.model')
 const HistorySong = require('../model/historySong.model')
 const Comment = require('../model/comment.model')
 const Singer = require('../model/singer.model')
-
+const UserComment = require('../model/userComment.model')
 class UserService {
 
     async createUser(user_name, password) {
@@ -18,6 +18,15 @@ class UserService {
             attributes: ['id', 'user_name', 'password', 'avatar_path', 'is_admin'],
             where: {
                 user_name: user_name
+            }
+        })
+        return res ? res.dataValues : null
+    }
+    async getUserInfoById(id) {
+        const res = await User.findOne({
+            attributes: ['id', 'user_name', 'password', 'avatar_path', 'is_admin'],
+            where: {
+                id: id
             }
         })
         return res ? res.dataValues : null
@@ -58,7 +67,6 @@ class UserService {
             attributes: ['song_id', 'listen_num'],
             where: { user_id }
         })
-
         return res
     }
     // 添加收藏音乐的记录
@@ -138,16 +146,18 @@ class UserService {
             })
         }
     }
-    // 根据歌曲ID获得歌曲信息
-    async getSongInfoById(id) {
-        const res = await Song.findOne({
-            attributes: ['id', 'song_name', 'singer_id', 'publish_time', 'file_name', 'visitors', 'lyric'],
+    // 查询评论点赞状态
+    async queryUserCommentState({ user_id, comment_id }) {
+        const res = await UserComment.findOne({
+            attributes: ['has_zan'],
             where: {
-                id: id
+                user_id,
+                comment_id
             }
         })
         return res ? res.dataValues : null
     }
+
 
 }
  

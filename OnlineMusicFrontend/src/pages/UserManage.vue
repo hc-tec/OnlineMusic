@@ -4,7 +4,7 @@
     <el-dialog v-model="data.imageVisible" :show-close="false" class="image-dialog">
       <el-image class="large-image" :src="data.currentImageUrl"/>
     </el-dialog>
-    <el-table :data="filterTableData" height="400" style="width: 100%">
+    <el-table :data="filterTableData" style="width: 100%; height: 100%;">
       <!-- 头像列 -->
       <el-table-column label="头像" >
         <template #default="scope">
@@ -160,9 +160,12 @@ onMounted(() => {
 
 <style scoped lang="less">
 .container {
+  margin-top: 20px;
   width: 80%;
   max-width: 900px;
   min-width: 700px;
+  height: 90%;
+  min-height: 413px;
 }
 
 .search-input {

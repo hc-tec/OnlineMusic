@@ -1,24 +1,26 @@
 <template>
-
-  <div class="usercenter-container">
-    <div class="menu">
-      <el-menu
-        :default-active="userCenterData.activeIndex"
-        class="el-menu-vertical-demo"
-        @select="handleSelect"
-      >
-        <el-menu-item index="/userCenter/changePassword">
-          <span>密码修改</span>
-        </el-menu-item>
-        <el-menu-item index="/userCenter/changeAvatar">
-          <span>头像修改</span>
-        </el-menu-item>
-      </el-menu>
-    </div>
-    <div class="content">
-      <router-view></router-view>
+  <div class="usercenter-container-container">
+    <div class="usercenter-container">
+      <div class="menu">
+        <el-menu
+          :default-active="userCenterData.activeIndex"
+          class="el-menu-vertical-demo"
+          @select="handleSelect"
+        >
+          <el-menu-item index="/userCenter/changePassword">
+            <span>密码修改</span>
+          </el-menu-item>
+          <el-menu-item index="/userCenter/changeAvatar">
+            <span>头像修改</span>
+          </el-menu-item>
+        </el-menu>
+      </div>
+      <div class="content">
+        <router-view></router-view>
+      </div>
     </div>
   </div>
+  
 </template>
 
 <script setup>
@@ -41,6 +43,14 @@ const handleSelect = (key, keyPath) => {
 </script>
 
 <style scoped lang="less">
+.usercenter-container-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .usercenter-container {
   background-color: rgb(255, 255, 255);
   width: 70%;

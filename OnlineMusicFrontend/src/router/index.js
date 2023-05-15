@@ -19,6 +19,7 @@ const AddSong = () => import('../pages/SingerManage/AddSong.vue')
 const SongManage = () => import('../pages/SongManage.vue')
 const ViewSong = () => import('../pages/SongManage/ViewSong.vue')
 const EditSong = () => import('../pages/SongManage/EditSong.vue')
+const ViewComment = () => import('../pages/SongManage/ViewComment.vue')
 
 const LoveSongs = () => import('../pages/LoveSongs.vue')
 const HistorySongs = () => import('../pages/HistorySongs.vue')
@@ -121,6 +122,10 @@ const router = createRouter({
                 {
                     path: 'editSong',
                     component: EditSong
+                },
+                {
+                    path: 'viewComment',
+                    component: ViewComment
                 }
             ]
         },
@@ -143,8 +148,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from, next) => {
-    const store = useStore()
-    store.routerPath = to.path
+    localStorage.setItem('routerPath', to.path)
     NProgress.done()
 })
 

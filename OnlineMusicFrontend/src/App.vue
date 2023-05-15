@@ -30,11 +30,12 @@ onMounted(() => {
     if(res.data.code == 0) {
       const userInfo = res.data.result.userInfo
       // 同步数据
+      store.id = userInfo.id
       store.isLogin = true
       store.isAdmin = userInfo.is_admin
       store.userName = userInfo.user_name
       store.avatarPath = `${import.meta.env.VITE_HOSTPORT}/avatar/${userInfo.avatar_path}`
-      store.isAdmin && store.routerPath == '/' && router.replace('/userManage')
+      store.isAdmin && localStorage.getItem('routerPath') == '/' && router.replace('/userManage')
       ElMessage({
         message: `欢迎您，${store.userName}`,
         type: 'success',
@@ -65,7 +66,7 @@ onMounted(() => {
   padding: 60px 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   height: 100vh;
 }

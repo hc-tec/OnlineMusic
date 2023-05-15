@@ -6,7 +6,7 @@
       <el-table-column prop="song_name" label="歌曲名"  />
       <el-table-column prop="id" label="编号"/>
       <el-table-column prop="singer_name" label="所属歌手"  />
-      <el-table-column prop="publish_time" label="发布时间" width="170"/>
+      <el-table-column prop="publish_time" label="发布时间" width="160"/>
       <el-table-column prop="visitors" label="访问量" align="center" sortable width="90"/>
 
       <el-table-column width="200">
@@ -28,6 +28,8 @@
           </el-button>
           <!-- 删除歌曲 -->
           <el-button type="danger" circle plain @click="deleteSong(scope.row.id, scope.row.song_name, scope.row.file_name)"><el-icon><Delete /></el-icon></el-button>
+          <!-- 浏览该歌曲下的评论 -->
+          <el-button type="info" circle plain @click="viewComment(scope.row.id, scope.row.song_name, scope.row.singer_name)"><el-icon><ChatLineSquare /></el-icon></el-button>
         </template>
 
       </el-table-column>
@@ -140,6 +142,12 @@ const deleteSong = (id, song_name, file_name) => {
   .catch(() => {})
 }
 
+const viewComment = (id, song_name, singer_name) => {
+  router.push({
+    path: '/songManage/viewComment',
+    query: {id, song_name, singer_name}
+  })
+}
 onMounted(() => {
 
   axios.get('getAllSongsSimpleInfo').then(res => {
@@ -152,7 +160,7 @@ onMounted(() => {
           singer_name: result.singer_name,
           visitors: result.songInfo.visitors, 
           file_name: result.songInfo.file_name,
-          publish_time: dayjs(result.songInfo.publish_time).format('YYYY-MM-DD HH:mm:ss')
+          publish_time: dayjs(result.songInfo.publish_time).format('YYYY-MM-DD HH:mm')
         })
       }
     }
@@ -171,6 +179,7 @@ onMounted(() => {
 
 <style scoped lang="less">
 .container {
+  margin-top: 20px;
   width: 90%;
   max-width: 1000px;
   min-width: 800px;

@@ -4,11 +4,11 @@ import router from '../router'
 
 const useStore = defineStore('main', {
     state: () => ({
+        id: 0,
         isLogin: false,
         isAdmin: false,
         userName: '',
         avatarPath: '',
-        routerPath: '/',
     }),
 
     actions: {
