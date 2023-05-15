@@ -143,6 +143,8 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from, next) => {
+    const store = useStore()
+    store.routerPath = to.path
     NProgress.done()
 })
 

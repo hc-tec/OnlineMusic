@@ -2,8 +2,8 @@ const path = require('path')
 const fs = require('fs')
 const bcrypt = require('bcryptjs')
 
-const { createSinger, updateSingerById, createSong, updateSongById, queryAllUsers, deleteUserById } = require('../service/admin.service')
-const { updateUserById } = require('../service/user.service')
+const { createSinger, updateSingerById, createSong, updateSongById, queryAllUsers, deleteUserById, deleteSongById, deleteSingerById } = require('../service/admin.service')
+const { updateUserById, queryAllSongs } = require('../service/user.service')
 
 class AdminController {
     async addSinger(ctx) {
@@ -151,6 +151,58 @@ class AdminController {
         ctx.body = {
             code: '10038',
             message: '删除用户失败',
+            result: ''
+        }
+    }
+    // 删除歌曲
+    async deleteSong(ctx) {
+        const { id, file_name } = ctx.request.body
+        const songPath = path.join(__dirname, '../../upload/song', file_name)
+        // 删除歌曲文件
+        fs.existsSync(songPath) && fs.unlinkSync(songPath)
+        const res  = await deleteSongById(id)
+        if(res) {
+            ctx.body = {
+                code: '0',
+                message: '删除歌曲成功',
+                result: res
+            }
+            return
+        }
+        ctx.body = {
+            code: '10041',
+            message: '删除歌曲失败',
+            result: ''
+        }
+
+    }
+    // 删除歌手及其歌曲
+    async deleteSinger(ctx) {
+        const { id } = ctx.request.body
+        const songList = await queryAllSongs(false, id)
+        // 歌手名下存在歌曲则删除歌曲
+        if(songList.length) {
+            await (async () => {
+                for await (const item of songList) {
+                    const songPath = path.join(__dirname, '../../upload/song', item.file_name)
+                    fs.existsSync(songPath) && fs.unlinkSync(songPath)
+                    await deleteSongById(item.id)
+                }
+            })()
+        }
+
+        const res = await deleteSingerById(id)
+        if(res) {
+            ctx.body = {
+                code: '0',
+                message: '删除歌手成功',
+                result: res
+            }
+            return
+        }
+        ctx.body = {
+            code: '10042',
+            message: '删除歌手失败',
             result: ''
         }
     }

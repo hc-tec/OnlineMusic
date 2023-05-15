@@ -85,6 +85,7 @@ const handleBlur = () => {
       ElMessage({
         message: '该用户不存在',
         type: 'warning',
+        duration: 1000
       })
     }
   }).catch(err => {
@@ -121,6 +122,7 @@ const login = () => {
       ElMessage({
         message: `欢迎您，${store.userName}`,
         type: 'success',
+        duration: 1000
       })
     }
     else {
@@ -131,6 +133,7 @@ const login = () => {
       ElMessage({
         message: `密码错误，请重试`,
         type: 'error',
+        duration: 1000
       })
     }
   }).catch(err => {

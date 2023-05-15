@@ -87,7 +87,20 @@ class AdminService {
         })
         return res
     }
-
+    // 根据歌曲ID删除歌曲
+    async deleteSongById(id) {
+        const res = await Song.destroy({
+            where: { id }
+        })
+        return res
+    }
+    // 根据歌曲ID删除歌曲
+    async deleteSingerById(id) {
+        const res = await Singer.destroy({
+            where: { id }
+        })
+        return res
+    }
 
 }
 

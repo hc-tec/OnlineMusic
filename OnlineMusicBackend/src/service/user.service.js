@@ -122,12 +122,21 @@ class UserService {
         return res
     }
     // 查询所有歌曲信息
-    async queryAllSongs(includeLyric) {
+    async queryAllSongs(includeLyric, singer_id) {
         let attributes = ['id', 'song_name', 'singer_id', 'publish_time', 'file_name', 'visitors']
         if(includeLyric) attributes.push('lyric')
 
-        const res = await Song.findAll({ attributes })
-        return res
+        if(singer_id === undefined) {
+            return await Song.findAll({ attributes })
+        }
+        else {
+            return await Song.findAll({
+                attributes,
+                where: {
+                    singer_id
+                }
+            })
+        }
     }
     // 根据歌曲ID获得歌曲信息
     async getSongInfoById(id) {
@@ -139,6 +148,7 @@ class UserService {
         })
         return res ? res.dataValues : null
     }
+
 }
  
 module.exports = new UserService()

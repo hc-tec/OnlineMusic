@@ -22,9 +22,8 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, computed } from 'vue';
+import { reactive, computed } from 'vue';
 import { useStore } from "../pinia";
-import axios from '../utils/axios'
 import router from '../router';
 
 const store = useStore()
@@ -33,7 +32,7 @@ const data = reactive({
 })
 
 data.activeIndex = computed(() => {
-  const res = router.currentRoute.value.fullPath.match('^/[^/]+/[^/]+')
+  const res = router.currentRoute.value.path.match('^/[^/]+/[^/]+')
   return res? res[0] : ''
 })
 

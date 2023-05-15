@@ -71,10 +71,18 @@ const showLargeImage = (url) => {
 const resetPassword = (id) => {
   axios.post('resetPassword', {id}).then(res => {
     if(res.data.code == 0) {
-      ElMessage.success('重置密码成功')
+      ElMessage({
+        message: '重置密码成功',
+        type: 'success',
+        duration: 1000
+      })
     }
     else {
-      ElMessage.error('重置密码成功')
+      ElMessage({
+        message: '重置密码失败',
+        type: 'error',
+        duration: 1000
+      })
     }
   }).catch(err => {
     console.log(err)
@@ -102,10 +110,18 @@ const deleteUser = (id, user_name, avatar_path) => {
             break;
           }
         }
-        ElMessage.success('删除成功')
+        ElMessage({
+          message: '删除成功',
+          type: 'success',
+          duration: 1000
+        })
       }
       else {
-        ElMessage.error('删除失败')
+        ElMessage({
+          message: '删除失败',
+          type: 'error',
+          duration: 1000
+        })
       }
     }).catch(err => {
       console.log(err);
@@ -128,7 +144,11 @@ onMounted(() => {
         }
       }
       else {
-        ElMessage.error('获取用户信息失败')
+        ElMessage({
+          message: '获取用户信息失败',
+          type: 'error',
+          duration: 1000
+        })
       }
     }).catch(err => {
       console.log(err);

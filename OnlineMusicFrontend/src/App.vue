@@ -18,6 +18,7 @@ import Header from './components/Header.vue'
 import NProgress from "nprogress";
 import "nprogress/nprogress.css"; 
 import axios from './utils/axios';
+import router from './router';
 
 NProgress.configure({ showSpinner: false })
 const store = useStore()
@@ -33,15 +34,18 @@ onMounted(() => {
       store.isAdmin = userInfo.is_admin
       store.userName = userInfo.user_name
       store.avatarPath = `${import.meta.env.VITE_HOSTPORT}/avatar/${userInfo.avatar_path}`
+      store.isAdmin && store.routerPath == '/' && router.replace('/userManage')
       ElMessage({
         message: `欢迎您，${store.userName}`,
-        type: 'success'
+        type: 'success',
+        duration: 1000
       })
     }
     else {
       ElMessage({
         message: `身份信息过期，请重新登录`,
-        type: 'warning'
+        type: 'warning',
+        duration: 1000
       })
     }
   }).catch(err => {

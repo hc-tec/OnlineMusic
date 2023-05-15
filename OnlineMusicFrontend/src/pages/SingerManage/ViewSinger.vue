@@ -11,7 +11,7 @@
       <template #default="scope">
         <el-button type="primary" circle @click="editSinger(scope.row)"><el-icon><Edit /></el-icon></el-button>
         <el-button type="success" circle plain @click="addSong(scope.row.id, scope.row.singer_name)"><el-icon><Plus /></el-icon></el-button>
-        <el-button type="danger" circle plain><el-icon><Delete /></el-icon></el-button>
+        <el-button type="danger" circle plain @click="deleteSinger(scope.row.id, scope.row.singer_name)"><el-icon><Delete /></el-icon></el-button>
       </template>
 
     </el-table-column>
@@ -54,6 +54,47 @@ const handleGender = (str) => {
   return '无'
 }
 
+const deleteSinger = (id, singer_name) => {
+  ElMessageBox.confirm(
+  `此操作将删除歌手 ${singer_name} 及其所有歌曲`,
+  '警告',
+  {
+    confirmButtonText: '确认删除',
+    cancelButtonText: '取消',
+    type: 'warning',
+    autofocus: false
+  }
+  )
+  .then(() => {
+    axios.post('/deleteSinger', {id}).then(res => {
+      if(res.data.code == 0) {
+        for (let index = 0; index < data.singerList.length; index++) {
+          const element = data.singerList[index];
+          if(element.id == id) {
+            data.singerList.splice(index, 1)
+            break;
+          }
+        }
+        ElMessage({
+          message: '删除成功',
+          type: 'success',
+          duration: 1000
+        })
+      }
+      else {
+        ElMessage({
+          message: '删除失败',
+          type: 'error',
+          duration: 1000
+        })
+      }
+    }).catch(err => {
+      console.log(err);
+    })
+  })
+  .catch(() => {})
+}
+
 onMounted(() => {
   if(!store.isAdmin) return
   axios.get('getAllSingers').then(res => {
@@ -69,7 +110,11 @@ onMounted(() => {
       }
     }
     else {
-      ElMessage.error('获取歌手信息失败')
+      ElMessage({
+        message: '获取歌手信息失败',
+        type: 'error',
+        duration: 1000
+      })
     }
   }).catch(err => {
     console.log(err);

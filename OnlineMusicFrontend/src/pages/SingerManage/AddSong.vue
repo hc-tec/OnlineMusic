@@ -66,14 +66,26 @@ const addSong = () => {
   }).then(res => {
     if(res.data.code == 0) {
       data.uploadFile = null
-      ElMessage.success('添加音乐成功')
+      ElMessage({
+        message: '添加音乐成功',
+        type: 'success',
+        duration: 1000
+      })
     }
     else if(res.data.code == 10025) {
       songName.value.focus()
-      ElMessage.warning('该音乐已存在')
+      ElMessage({
+        message: '该音乐已存在',
+        type: 'warning',
+        duration: 1000
+      })
     }
     else{
-      ElMessage.error('添加音乐失败')
+      ElMessage({
+        message: '添加音乐失败',
+        type: 'error',
+        duration: 1000
+      })
     }
   }).catch(err => {
     console.log(err)
@@ -82,11 +94,19 @@ const addSong = () => {
 
 const songChange = (file) => {
   if(file.raw.size > 1024 * 1024 * 10) {
-    ElMessage.warning('音乐文件过大')
+    ElMessage({
+        message: '音乐文件过大',
+        type: 'warning',
+        duration: 1000
+      })
     return
   }
   else if (file.raw.type != 'audio/mpeg') {
-    ElMessage.warning('文件格式不合法')
+    ElMessage({
+        message: '文件格式不合法',
+        type: 'warning',
+        duration: 1000
+      })
     return
   }
   data.uploadFile = file.raw

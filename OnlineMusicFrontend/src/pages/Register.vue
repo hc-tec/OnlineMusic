@@ -77,6 +77,7 @@ const handleBlur = _.debounce(() => {
     ElMessage({
       message: '密码两次的输入不一致',
       type: 'warning',
+      duration: 1000
     })
   }
 }, 500)
@@ -111,6 +112,7 @@ const register = () => {
           ElMessage({
             message: `欢迎您，${store.userName}`,
             type: 'success',
+            duration: 1000
           })
         }).catch(err2 => {
           console.log(err2);
@@ -125,6 +127,7 @@ const register = () => {
       ElMessage({
         message: `用户已存在`,
         type: 'warning',
+        duration: 1000
       })
     }
   }).catch(err => {

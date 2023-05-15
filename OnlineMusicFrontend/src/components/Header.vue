@@ -72,7 +72,7 @@ const headerData = reactive({
 })
 
 headerData.activeIndex = computed(() => {
-  const res = router.currentRoute.value.fullPath.match('^/[A-z]*')
+  const res = router.currentRoute.value.path.match('^/[A-z]*')
   return res? res[0] : ''
 })
 
@@ -98,6 +98,7 @@ const exitLogin = () => {
   ElMessage({
     message: `登出成功`,
     type: 'success',
+    duration: 1000
   })
 }
 </script>

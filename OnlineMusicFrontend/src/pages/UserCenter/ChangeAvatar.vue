@@ -37,10 +37,18 @@ const avatarChange = (file) => {
   let imageJudger = new ImageJudger(file.raw)
   imageJudger.getImageType(imageType => {
     if(!['JPG','PNG','WEBP'].includes(imageType)) {
-      ElMessage.error('上传文件格式不合法')
+      ElMessage({
+        message: '上传文件格式不合法',
+        type: 'warning',
+        duration: 1000
+      })
     }
     else if(file.raw.size > 1024 * 1024 * 2) {
-      ElMessage.warning('头像文件过大')
+      ElMessage({
+        message: '头像文件过大',
+        type: 'warning',
+        duration: 1000
+      })
     }
     else {
       data.canSave = true
@@ -60,11 +68,19 @@ const saveChange = () => {
   .then(res => {
     if(res.data.code == 0) {
       store.avatarPath = `${import.meta.env.VITE_HOSTPORT}/avatar/${res.data.result.newAvatarName}`
-      ElMessage.success('头像更新成功')
+      ElMessage({
+        message: '头像更新成功',
+        type: 'success',
+        duration: 1000
+      })
       data.canSave = false
     }
     else {
-      ElMessage.error('头像更新失败')
+      ElMessage({
+        message: '头像更新失败',
+        type: 'error',
+        duration: 1000
+      })
     }
   })
   .catch((error) => {

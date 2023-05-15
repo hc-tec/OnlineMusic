@@ -30,7 +30,7 @@ const userCenterData = reactive({
 })
 
 userCenterData.activeIndex = computed(() => {
-  const res = router.currentRoute.value.fullPath.match('^/[^/]+/[^/]+')
+  const res = router.currentRoute.value.path.match('^/[^/]+/[^/]+')
   return res? res[0] : ''
 })
 

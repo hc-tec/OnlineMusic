@@ -81,14 +81,26 @@ const editSong = () => {
     if(res.data.code == 0 || res.data.code == 10027) {
       data.uploadFile = null
       router.replace('/songManage/viewSong')
-      ElMessage.success('编辑音乐成功')
+      ElMessage({
+        message: '编辑音乐成功',
+        type: 'success',
+        duration: 1000
+      })
     }
     else if(res.data.code == 10025) {
       songName.value.focus()
-      ElMessage.warning('音乐名已存在')
+      ElMessage({
+        message: '音乐名已存在',
+        type: 'warning',
+        duration: 1000
+      })
     }
     else{
-      ElMessage.error('编辑音乐失败')
+      ElMessage({
+        message: '编辑音乐失败',
+        type: 'error',
+        duration: 1000
+      })
     }
   }).catch(err => {
     console.log(err)
@@ -97,11 +109,19 @@ const editSong = () => {
 
 const songChange = (file) => {
   if(file.raw.size > 1024 * 1024 * 10) {
-    ElMessage.warning('音乐文件过大')
+    ElMessage({
+      message: '音乐文件过大',
+      type: 'warning',
+      duration: 1000
+    })
     return
   }
   else if (file.raw.type != 'audio/mpeg') {
-    ElMessage.warning('文件格式不合法')
+    ElMessage({
+      message: '文件格式不合法',
+      type: 'warning',
+      duration: 1000
+    })
     return
   }
   data.uploadFile = file.raw

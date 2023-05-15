@@ -97,15 +97,27 @@ const editSinger = () => {
   axios.post('/changeSinger', editInfo).then(res => {
     if(res.data.code == 0) {
       router.replace('/singerManage/viewSinger')
-      ElMessage.success('更新歌手信息成功')
+      ElMessage({
+        message: '更新歌手信息成功',
+        type: 'success',
+        duration: 1000
+      })
     }
     else if (res.data.code == 10017) {
       singerName.value.focus()
-      ElMessage.warning('该歌手已存在')
+      ElMessage({
+        message: '该歌手已存在',
+        type: 'warning',
+        duration: 1000
+      })
     }
     else {
       router.replace('/singerManage/viewSinger')
-      ElMessage.success('更新歌手信息成功')
+      ElMessage({
+        message: '更新歌手信息成功',
+        type: 'success',
+        duration: 1000
+      })
     }
   }).catch(err => {
     console.log(err);

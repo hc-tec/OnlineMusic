@@ -50,12 +50,14 @@ const changePassword = () => {
       ElMessage({
         message: '修改密码成功',
         type: 'success',
+        duration: 1000
       })
     }
     else {
       ElMessage({
         message: '原密码错误',
         type: 'error',
+        duration: 1000
       })
     }
   }).catch(err => {
