@@ -2,8 +2,8 @@ const path = require('path')
 const fs = require('fs')
 const bcrypt = require('bcryptjs')
 
-const { createSinger, updateSingerById, createSong, updateSongById, queryAllUsers, deleteUserById, deleteSongById, deleteSingerById } = require('../service/admin.service')
-const { updateUserById, queryAllSongs } = require('../service/user.service')
+const { createSinger, updateSingerById, createSong, updateSongById, queryAllUsers, deleteUserById, deleteSongById, deleteSingerById, queryAllComments } = require('../service/admin.service')
+const { updateUserById, queryAllSongs, deleteComment, getUserInfoById, querySongInfoById } = require('../service/user.service')
 
 class AdminController {
     async addSinger(ctx) {
@@ -204,6 +204,40 @@ class AdminController {
             code: '10042',
             message: '删除歌手失败',
             result: ''
+        }
+    }
+    // 管理员删除评论
+    async adminDeleteComment(ctx) {
+        const { id } = ctx.request.body
+        const res = await deleteComment(id)
+        if(res) {
+            ctx.body = {
+                code: '0',
+                message: '删除评论成功',
+                result: res
+            }
+            return
+        }
+        ctx.body = {
+            code: '10045',
+            message: '删除评论失败',
+            result: ''
+        }
+    }
+    // 管理员获得所有评论信息
+    async getAllComments(ctx) {
+        const commentInfo = await queryAllComments()
+
+        for await (const item of commentInfo) {
+            const { user_name } = await getUserInfoById(item.user_id)
+            const { song_name } = await querySongInfoById(item.song_id)
+            item.dataValues.user_name = user_name
+            item.dataValues.song_name = song_name
+        }
+        ctx.body = {
+            code: '0',
+            message: '获取评论信息成功',
+            result: commentInfo
         }
     }
 }

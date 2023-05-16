@@ -4,7 +4,7 @@ const fs = require('fs')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
-const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment, queryAllSingers, queryAllSongs, querySongInfoById, queryUserCommentState, getUserInfoById } = require('../service/user.service')
+const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment, queryAllSingers, queryAllSongs, querySongInfoById, queryUserCommentState, getUserInfoById, updateCommentById, updateUserComment } = require('../service/user.service')
 const { updateSongById } = require('../service/admin.service')
 
 // 将执行某个请求的操作写在controller文件夹下
@@ -272,17 +272,17 @@ class UserController {
         }
 
         const res = await createComment(user_id, song_id, content, new Date())
+        const { user_name, avatar_path } = await getUserInfoById(user_id)
         ctx.body = {
             code: '0',
             message: '添加评论成功',
-            result: res
+            result: { ...res, user_name, avatar_path }
         }
     }
     // 用户删除自己的评论
     async deleteComment(ctx) {
         const user_id = ctx.state.userInfo.id
         const { comment_id } = ctx.request.body
-
         const res = await queryCommentInfo({ comment_id })
         if(res.user_id != user_id) {
             ctx.body = {
@@ -292,8 +292,6 @@ class UserController {
             }
             return
         }
-        
-
         const result = await deleteComment(comment_id)
         if(!result) {
             ctx.body = {
@@ -411,7 +409,7 @@ class UserController {
 
             if (user_id) {
                 const has_zan = await queryUserCommentState({ user_id, comment_id: item.id })
-                item.dataValues.has_zan = has_zan
+                item.dataValues.has_zan = has_zan ? has_zan.has_zan : false
             }
         }
 
@@ -421,6 +419,32 @@ class UserController {
             result: res
         }
 
+    }
+    // 用户点赞取消点赞
+    async handleFavour(ctx) {
+        const user_id = ctx.state.userInfo.id
+        const { id, has_zan, favour } = ctx.request.body
+
+        try {
+            const newFavour = has_zan ? favour - 1 : favour + 1
+            await updateCommentById(id, newFavour)
+            await updateUserComment(user_id, id, !has_zan)
+            ctx.body = {
+                code: '0',
+                message: '切换点赞状态成功',
+                result: {
+                    has_zan: !has_zan,
+                    favour: newFavour
+                }
+            }
+        }
+        catch (error) {
+            ctx.body = {
+                code: '10044',
+                message: '切换点赞状态失败',
+                result: error
+            }
+        }
     }
 }
 

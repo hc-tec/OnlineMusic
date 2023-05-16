@@ -1,28 +1,31 @@
 <template>
-  <div class="login-container">
-    <div class="logo-avatar">
-      <el-avatar :size="80" :src="loginData.avatarUrl">
-        <img src="../assets/OnlineMusic.svg"/>
-      </el-avatar>
+  <div class="login-container-container">
+    <div class="login-container">
+      <div class="logo-avatar">
+        <el-avatar :size="80" :src="loginData.avatarUrl">
+          <img src="../assets/OnlineMusic.svg"/>
+        </el-avatar>
+      </div>
+      <!-- 输入框 -->
+      <el-input v-model="loginData.userName" class="login-input" placeholder="账号" maxlength="7" @input="handleInput('userName')" @blur="handleBlur" ref="userNameInput">
+        <template #prefix>
+          <el-icon><UserFilled /></el-icon>
+        </template>
+      </el-input>
+      <el-input v-model="loginData.password" class="login-input" placeholder="密码" type="password" show-password maxlength="12" @input="handleInput('password')" ref="passwordInput">
+        <template #prefix>
+          <el-icon><Lock /></el-icon>
+        </template>
+      </el-input>
+      <!-- 登录按钮 -->
+      <div class="buttons">
+        <el-button type="primary" plain :disabled="!loginData.canLogin" class="login-button" @click="login">登录</el-button>
+        <el-button type="primary" text class="register-button" @click="jumpToRegister">注册</el-button>
+      </div>
+      
     </div>
-    <!-- 输入框 -->
-    <el-input v-model="loginData.userName" class="login-input" placeholder="账号" maxlength="7" @input="handleInput('userName')" @blur="handleBlur" ref="userNameInput">
-      <template #prefix>
-        <el-icon><UserFilled /></el-icon>
-      </template>
-    </el-input>
-    <el-input v-model="loginData.password" class="login-input" placeholder="密码" type="password" show-password maxlength="12" @input="handleInput('password')" ref="passwordInput">
-      <template #prefix>
-        <el-icon><Lock /></el-icon>
-      </template>
-    </el-input>
-    <!-- 登录按钮 -->
-    <div class="buttons">
-      <el-button type="primary" plain :disabled="!loginData.canLogin" class="login-button" @click="login">登录</el-button>
-      <el-button type="primary" text class="register-button" @click="jumpToRegister">注册</el-button>
-    </div>
-    
   </div>
+  
 </template>
 
 <script setup>
@@ -144,6 +147,13 @@ const login = () => {
 </script>
 
 <style scoped lang="less">
+.login-container-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .login-container {
   display: flex;
   flex-direction: column;

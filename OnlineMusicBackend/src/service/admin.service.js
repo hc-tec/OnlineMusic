@@ -1,6 +1,7 @@
 const Singer = require('../model/singer.model')
 const Song = require('../model/song.model')
 const User = require('../model/user.model')
+const Comment = require('../model/comment.model')
 
 class AdminService {
     // 创建歌手
@@ -98,6 +99,13 @@ class AdminService {
     async deleteSingerById(id) {
         const res = await Singer.destroy({
             where: { id }
+        })
+        return res
+    }
+    // 查询所有评论信息
+    async queryAllComments() {
+        const res = await Comment.findAll({
+            attributes: ['id', 'content', 'song_id', 'user_id', 'favour', 'publish_time'],
         })
         return res
     }

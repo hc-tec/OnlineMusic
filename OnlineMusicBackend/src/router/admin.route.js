@@ -2,7 +2,7 @@ const Router = require('koa-router')
 
 const { auth } = require('../middleware/user.middleware')
 const { hasAdminPermission, verifySinger, verifySong, verifyChangeSong } = require('../middleware/admin.middleware')
-const { addSinger, changeSinger, addSong, changeSong, getAllUsers, resetPassword, deleteUser, deleteSong, deleteSinger } = require('../controller/admin.controller')
+const { addSinger, changeSinger, addSong, changeSong, getAllUsers, resetPassword, deleteUser, deleteSong, deleteSinger, adminDeleteComment, getAllComments } = require('../controller/admin.controller')
 
 
 const router = new Router()
@@ -25,6 +25,9 @@ router.post('/resetPassword', auth, hasAdminPermission, resetPassword)
 
 router.post('/deleteUser', auth, hasAdminPermission, deleteUser)
 
+router.post('/adminDeleteComment', auth, hasAdminPermission, adminDeleteComment)
+
+router.get('/getAllComments', auth, hasAdminPermission, getAllComments)
 
 module.exports = router
 

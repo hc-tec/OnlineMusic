@@ -149,7 +149,6 @@ const viewComment = (id, song_name, singer_name) => {
   })
 }
 onMounted(() => {
-
   axios.get('getAllSongsSimpleInfo').then(res => {
     if(res.data.code == 0) {
       for (const result of res.data.result) {

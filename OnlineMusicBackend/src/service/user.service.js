@@ -157,6 +157,24 @@ class UserService {
         })
         return res ? res.dataValues : null
     }
+    // 更新评论信息（更新点赞数量）
+    async updateCommentById(id, favour) {
+        const res = await Comment.update({ favour }, { where: { id } })
+        return !!res[0]
+    }
+    // 更新用户评论点赞状态
+    async updateUserComment(user_id, comment_id, has_zan) {
+        await UserComment.findOrCreate({
+            where: { user_id, comment_id },
+            defaults: {
+                user_id,
+                comment_id,
+                has_zan
+            }
+        })
+        const res = await UserComment.update({ has_zan }, { where: { user_id, comment_id } })
+        return !!res[0]
+    }
 
 
 }

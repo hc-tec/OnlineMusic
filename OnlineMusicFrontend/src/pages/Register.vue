@@ -1,28 +1,29 @@
 <template>
-  <div class="register-container">
-    <!-- 输入框 -->
-    <el-input v-model="registerData.userName" class="register-input" placeholder="账号" maxlength="7" @input="handleInput('userName')" ref="userNameInput">
-      <template #prefix>
-        <el-icon><UserFilled /></el-icon>
-      </template>
-    </el-input>
-    <el-input v-model="registerData.password" class="register-input" placeholder="密码" type="password" show-password maxlength="12" @input="handleInput('password')">
-      <template #prefix>
-        <el-icon><Lock /></el-icon>
-      </template>
-    </el-input>
-    <el-input v-model="registerData.password2" class="register-input" placeholder="确认密码" type="password" show-password maxlength="12" @input="handleInput('password2')" @blur="handleBlur" ref="password2Input">
-      <template #prefix>
-        <el-icon><Key /></el-icon>
-      </template>
-    </el-input>
-    <!-- 注册按钮 -->
-    <div class="buttons">
-      <el-button type="primary" plain :disabled="!registerData.canRegister" class="register-button" @click="register">注册</el-button>
+  <div class="register-container-container">
+    <div class="register-container">
+      <!-- 输入框 -->
+      <el-input v-model="registerData.userName" class="register-input" placeholder="账号" maxlength="7" @input="handleInput('userName')" ref="userNameInput">
+        <template #prefix>
+          <el-icon><UserFilled /></el-icon>
+        </template>
+      </el-input>
+      <el-input v-model="registerData.password" class="register-input" placeholder="密码" type="password" show-password maxlength="12" @input="handleInput('password')">
+        <template #prefix>
+          <el-icon><Lock /></el-icon>
+        </template>
+      </el-input>
+      <el-input v-model="registerData.password2" class="register-input" placeholder="确认密码" type="password" show-password maxlength="12" @input="handleInput('password2')" @blur="handleBlur" ref="password2Input">
+        <template #prefix>
+          <el-icon><Key /></el-icon>
+        </template>
+      </el-input>
+      <!-- 注册按钮 -->
+      <div class="buttons">
+        <el-button type="primary" plain :disabled="!registerData.canRegister" class="register-button" @click="register">注册</el-button>
+      </div>
+      
     </div>
-    
   </div>
-  
 </template>
 
 <script setup>
@@ -137,6 +138,14 @@ const register = () => {
 </script>
 
 <style scoped lang="less">
+.register-container-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .register-container {
   display: flex;
   flex-direction: column;

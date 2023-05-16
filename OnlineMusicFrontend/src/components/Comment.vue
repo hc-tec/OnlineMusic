@@ -1,24 +1,24 @@
 <template>
   <div class="comment-container">
-    <div class="delete-container" v-if="store.isAdmin || store.userName == data.user_name">
-      <el-icon @click="deleteComment(data.id)"><Delete /></el-icon>
+    <div class="delete-container" v-if="store.isAdmin || store.userName == props.user_name" @click="deleteComment(props.id)">
+      <el-icon><Delete /></el-icon>
     </div>
-    <el-avatar :size="54" :src="data.avatar_path">
+    <el-avatar :size="54" :src="props.avatar_path">
       <img src="../assets/unLogin.svg" />
     </el-avatar>
     <div class="content-time">
       <div class="content">
-        <span class="user-name">{{ data.user_name }}： </span>
-        <span class="content-info"> {{ data.content }} </span>
+        <span class="user-name">{{ props.user_name }}： </span>
+        <span class="content-info"> {{ props.content }} </span>
       </div>
       <div class="time">
         <div class="publish-time" >
           <el-icon><Clock /></el-icon>
-          {{ data.publish_time }}
+          {{ props.publish_time }}
         </div>
-        <div class="favour" @click="handleFavour(data.id, data.has_zan)">
-          <ZanIcon myIconSize="16" :myIconColor="data.has_zan? '#409EFF' : 'darkgrey'"></ZanIcon>
-          <span>{{ data.favour }}</span>
+        <div class="favour" @click="handleFavour(props.id, props.has_zan, props.favour)">
+          <ZanIcon myIconSize="16" :myIconColor="props.has_zan? '#409EFF' : 'darkgrey'"></ZanIcon>
+          <span>{{ props.favour }}</span>
         </div>
       </div>
     </div>
@@ -26,8 +26,10 @@
 </template>
 
 <script setup>
+import { ElMessage } from 'element-plus';
 import { useStore } from '../pinia'
 import {reactive} from 'vue'
+import axios from '../utils/axios';
 
 const props = defineProps({
   has_zan: Boolean,
@@ -41,17 +43,6 @@ const props = defineProps({
   // 方法
   deleteComment: Function,
   handleFavour: Function,
-})
-
-const data = reactive({
-  has_zan: props.has_zan,
-  id: props.id,
-  avatar_path: props.avatar_path,
-  user_name: props.user_name,
-  content: props.content,
-  publish_time: props.publish_time,
-  favour: props.favour,
-
 })
 
 const store = useStore()
@@ -144,7 +135,7 @@ const handleFavour = props.handleFavour
 }
 
 .delete-container {
-  transition: opacity .5s;
+  transition: all .3s;
   opacity: 0;
   visibility: hidden;
   position: absolute;
@@ -163,14 +154,10 @@ const handleFavour = props.handleFavour
       fill: white;
     }
   }
-  & :hover {
-    cursor: pointer;
-  }
 }
 
-.favour-icon-change {
-  path{
-    fill: @main-color;
-  }
+.delete-container:hover {
+  cursor: pointer;
+  background-color: #F56C6C;
 }
 </style>
