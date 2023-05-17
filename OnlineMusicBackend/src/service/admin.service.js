@@ -2,6 +2,8 @@ const Singer = require('../model/singer.model')
 const Song = require('../model/song.model')
 const User = require('../model/user.model')
 const Comment = require('../model/comment.model')
+const SongKu = require('../model/songKu.model')
+
 
 class AdminService {
     // 创建歌手
@@ -106,6 +108,36 @@ class AdminService {
     async queryAllComments() {
         const res = await Comment.findAll({
             attributes: ['id', 'content', 'song_id', 'user_id', 'favour', 'publish_time'],
+        })
+        return res
+    }
+    // 查询所有歌单信息
+    async queryAllSongKus({ id, ku_name }) {
+        let whereOpt = {}
+        id && (whereOpt.id = id)
+        ku_name && (whereOpt.ku_name = ku_name)
+        
+        const res = await SongKu.findAll({
+            attributes: ['id', 'ku_name', 'file_path', 'description'],
+            where: whereOpt
+        })
+        return res
+    }
+    // 新建歌单
+    async createSongKu({ ku_name, file_path, description }) {
+        let songKuObj = {}
+
+        ku_name && (songKuObj.ku_name = ku_name)
+        file_path && (songKuObj.file_path = file_path)
+        description && (songKuObj.description = description)
+
+        const res = await SongKu.create(songKuObj)
+        return res.dataValues
+    }
+    // 删除歌单
+    async deleteSongKuById(id) {
+        const res = await SongKu.destroy({
+            where: { id }
         })
         return res
     }

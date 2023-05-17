@@ -2,7 +2,7 @@ const path = require('path')
 const fs = require('fs')
 const bcrypt = require('bcryptjs')
 
-const { createSinger, updateSingerById, createSong, updateSongById, queryAllUsers, deleteUserById, deleteSongById, deleteSingerById, queryAllComments } = require('../service/admin.service')
+const { createSinger, updateSingerById, createSong, updateSongById, queryAllUsers, deleteUserById, deleteSongById, deleteSingerById, queryAllComments, createSongKu, deleteSongKuById, queryAllSongKus } = require('../service/admin.service')
 const { updateUserById, queryAllSongs, deleteComment, getUserInfoById, querySongInfoById } = require('../service/user.service')
 
 class AdminController {
@@ -238,6 +238,54 @@ class AdminController {
             code: '0',
             message: '获取评论信息成功',
             result: commentInfo
+        }
+    }
+    // 添加歌单
+    async addSongKu(ctx) {
+        const { ku_name, description } = ctx.request.body
+        const kuFile = ctx.request.files.file
+
+        // 移动歌单封面文件
+        let file_path = ''
+        if(kuFile) {
+            file_path = kuFile.newFilename
+            const newKuPath = path.join(__dirname, '../../upload/songKu', kuFile.newFilename)
+            fs.renameSync(kuFile.filepath, newKuPath)
+        }
+        
+        try {
+            const res = await createSongKu({ ku_name, description, file_path })
+            ctx.body = {
+                code: '0',
+                message: '新建歌单成功',
+                result: res
+            }
+            return
+        }
+        catch (error) {
+            ctx.body = {
+                code: '10051',
+                message: '新建歌单失败',
+                result: ''
+            }
+            return
+        }
+    }
+    // 删除歌单
+    async deleteSongKu(ctx) {
+        const { id } = ctx.request.body
+
+        const [ { file_path } ] = await queryAllSongKus({ id })
+        const oldSongKuPath = path.join(__dirname, '../../upload/songKu', file_path)
+        if(file_path != 'defaultSongKu.jpg') {
+            fs.existsSync(oldSongKuPath) && fs.unlinkSync(oldSongKuPath)
+        }
+        const res = await deleteSongKuById(id)
+
+        ctx.body = {
+            code: '0',
+            message: '删除歌单成功',
+            result: res
         }
     }
 }

@@ -114,6 +114,7 @@ const exitLogin = () => {
   background-image:radial-gradient(transparent 1px, white 1px);
   background-size: 4px 4px;
   backdrop-filter: saturate(50%) blur(10px);
+  background-color: #ffffffde;
   
   display: flex;
   flex-direction: row;

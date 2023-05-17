@@ -53,19 +53,11 @@
         </div>
       </transition>
     </div>
-    
-    
-    
-
-    
-  
   </div>
-
-
 </template>
 
 <script setup>
-import { onMounted, reactive, watch, computed } from 'vue'
+import { reactive, watch, computed } from 'vue'
 import axios from '../utils/axios';
 import { useStore } from '../pinia';
 import { dayjs } from 'element-plus';
@@ -223,9 +215,6 @@ const handleFavour = (id, has_zan, favour) => {
   })
 }
 
-onMounted(() => {
-  
-})
 </script>
 
 <style scoped lang="less">

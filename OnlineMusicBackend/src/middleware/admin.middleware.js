@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-const { getSingerInfo, getSongInfoBySingerId } = require('../service/admin.service')
+const { getSingerInfo, getSongInfoBySingerId, queryAllSongKus } = require('../service/admin.service')
 
 const { isSongNameValid } = require('../utils/vaildCheck')
 
@@ -203,10 +203,81 @@ const verifyChangeSong = async (ctx, next) => {
     await next()
 }
 
+const verifySongKu = async (ctx, next) => {
+    const { id, ku_name } = ctx.request.body
+    const kuFile = ctx.request.files.file
+    const songKuTypes = ['image/jpeg', 'image/png', 'image/webp']
+
+    if (!isSongNameValid(ku_name)) {
+        kuFile && fs.existsSync(kuFile.filepath) && fs.unlinkSync(kuFile.filepath)
+        ctx.body = {
+            code: '10046',
+            message: '歌单名不合法',
+            result: ''
+        }
+        return
+    }
+
+    if(ctx.request.url != '/addSongKu') {
+        if(!id) {
+            kuFile && fs.existsSync(kuFile.filepath) && fs.unlinkSync(kuFile.filepath)
+            ctx.body = {
+                code: '10047',
+                message: '缺少歌单ID参数',
+                result: ''
+            }
+            return
+        }
+        const res = await queryAllSongKus({ ku_name })
+        if(res[0].id != id) {
+            kuFile && fs.existsSync(kuFile.filepath) && fs.unlinkSync(kuFile.filepath)
+            ctx.body = {
+                code: '10050',
+                message: '歌单已存在',
+                result: ''
+            }
+            return
+        }
+    }
+    else {
+        const res = await queryAllSongKus({ ku_name })
+        if(res.length) { // 存在该歌单 
+            kuFile && fs.existsSync(kuFile.filepath) && fs.unlinkSync(kuFile.filepath)
+            ctx.body = {
+                code: '10050',
+                message: '歌单已存在',
+                result: ''
+            }
+            return
+        }
+    }
+    // 判断歌单封面
+    if(kuFile && !songKuTypes.includes(kuFile.mimetype)) {
+        fs.existsSync(kuFile.filepath) && fs.unlinkSync(kuFile.filepath)
+        ctx.body = {
+            code: '10048',
+            message: '封面文件格式不支持',
+            result: ''
+        }
+        return
+    }
+    if(kuFile && kuFile.size > 5242880) {
+        fs.existsSync(kuFile.filepath) && fs.unlinkSync(kuFile.filepath)
+        ctx.body = {
+            code: '10049',
+            message: '封面文件过大',
+            result: ''
+        }
+        return
+    }
+
+    await next()
+}
 
 module.exports = {
     hasAdminPermission,
     verifySong,
     verifyChangeSong,
-    verifySinger
+    verifySinger,
+    verifySongKu,
 }

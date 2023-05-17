@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
 const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment, queryAllSingers, queryAllSongs, querySongInfoById, queryUserCommentState, getUserInfoById, updateCommentById, updateUserComment } = require('../service/user.service')
-const { updateSongById } = require('../service/admin.service')
+const { updateSongById, queryAllSongKus } = require('../service/admin.service')
 
 // 将执行某个请求的操作写在controller文件夹下
 class UserController {
@@ -444,6 +444,15 @@ class UserController {
                 message: '切换点赞状态失败',
                 result: error
             }
+        }
+    }
+    // 获得歌单信息
+    async getAllSongKus(ctx) {
+        const res = await queryAllSongKus({})
+        ctx.body = {
+            code: '0',
+            message: '获取所有歌单成功',
+            result: res
         }
     }
 }

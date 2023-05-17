@@ -20,13 +20,17 @@ const SongManage = () => import('../pages/SongManage.vue')
 const ViewSong = () => import('../pages/SongManage/ViewSong.vue')
 const EditSong = () => import('../pages/SongManage/EditSong.vue')
 const ViewComment = () => import('../pages/SongManage/ViewComment.vue')
+// 歌单管理及其子路由
+const SongKuManage = () => import('../pages/SongKuManage.vue')
+const ViewSongKu = () => import('../pages/SongKuManage/ViewSongKu.vue')
+const AddSongKu = () => import('../pages/SongKuManage/AddSongKu.vue')
+const EditSongKu = () => import('../pages/SongKuManage/EditSongKu.vue')
 
 const LoveSongs = () => import('../pages/LoveSongs.vue')
 const HistorySongs = () => import('../pages/HistorySongs.vue')
 const UserManage = () => import('../pages/UserManage.vue')
 
 
-const SongKuManage = () => import('../pages/SongKuManage.vue')
 const CommentManage = () => import('../pages/CommentManage.vue')
 
 
@@ -131,7 +135,22 @@ const router = createRouter({
         },
         {
             path: '/songKuManage',
-            component: SongKuManage
+            component: SongKuManage,
+            redirect: '/songKuManage/viewSongKu',
+            children: [
+                {
+                    path: 'viewSongKu',
+                    component: ViewSongKu
+                },
+                {
+                    path: 'addSongKu',
+                    component: AddSongKu,
+                },
+                {
+                    path: 'editSongKu',
+                    component: EditSongKu,
+                },
+            ]
         },
         {
             path: '/commentManage',

@@ -1,15 +1,22 @@
 <template>
-  <div class="songku-container">
-    <div class="img-container" :style="{width: props.mySize, height: props.mySize}">
+  <div class="songku-container" @click="handleClick(props.id, props.songKuName, props.imgSrc, props.description)">
+    <div class="img-container">
+      <div class="img-foot"></div>
       <div class="mask">
         <div class="opra-button">
-          <el-icon class="opra-icon"><VideoPlay /></el-icon>
+          <el-icon class="opra-icon" @click.stop="props.handleIconClick(props.id)">
+            <VideoPlay v-if="!store.isAdmin"/>
+            <Delete v-else/>
+          </el-icon>
         </div>
       </div>
       <div :style="{
         backgroundImage: `url(${props.imgSrc})`
       }" class="songku-img">
       </div>
+    </div>
+    <div class="songku-name">
+      {{props.songKuName}}
     </div>
     
   </div>
@@ -18,12 +25,24 @@
 </template>
 
 <script setup>
-const props = defineProps(['mySize', 'imgSrc' ])
+import { useStore } from "../pinia";
+const store = useStore()
+const props = defineProps({
+  imgSrc: String,
+  songKuName: String,
+  handleClick: Function,
+  handleIconClick: Function,
+  id: Number,
+  description: String,
+})
 </script>
 
 <style scoped lang="less">
 .songku-container {
+  height: 240px;
   .img-container {
+    width: 200px;
+    height: 200px;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -39,9 +58,10 @@ const props = defineProps(['mySize', 'imgSrc' ])
       .mask {
         display: block;
       }
-      
+      .img-foot {
+        transform: rotate(-15deg);
+      }
     }
-
     .mask {
       transition: all .3s;
       opacity: .9;
@@ -62,28 +82,53 @@ const props = defineProps(['mySize', 'imgSrc' ])
       background-position: center 0;
       transition: all .3s cubic-bezier(0.22, 0.61, 0.36, 1);
     }
+    .img-foot {
+      z-index: 8;
+      position: absolute;
+      transition: all .3s;
+      width: 150%;
+      height: 50%;
+      bottom: -100px;
+      left: 0;
+      opacity: .8;
+      background-color: @main-color;
+      transform-origin: 0 0 ;
+    }
   }
-  
 }
-
 .opra-button {
   position: absolute;
   right: 10px;
   bottom: 10px;
-  width: 40px;
-  height: 40px;
-
+  width: 30px;
+  height: 30px;
   :deep(.opra-icon) {
     width: 100%;
     height: 100%;
     svg {
+      transition: all .2s;
       width: 100%;
       height: 100%;
       path {
+        transition: all .3s;
         fill: rgba(255, 255, 255, 0.8);
+      }
+      &:hover {
+        path {
+          opacity: .6;
+        }
+      }
+      &:active {
+        transform: scale(.95);
       }
     }
     
   }
+}
+.songku-name {
+  margin-top: 6px;
+  margin-left: 6px;
+  font-size: 20px;
+  font-weight: bold;
 }
 </style>
