@@ -8,7 +8,7 @@
   >
     <el-input resize="none" type="textarea" :rows="6" v-model="data.newComment" placeholder="快来分享听歌感悟吧"/>
     <template #footer>
-      <span class="dialog-footer">
+      <span >
         <el-button @click="data.commentDialogVisible = false">取消</el-button>
         <el-button type="primary" @click="addComment" :disabled="!data.newComment">
           确定添加

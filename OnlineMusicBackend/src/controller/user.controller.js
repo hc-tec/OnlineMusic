@@ -4,8 +4,8 @@ const fs = require('fs')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
-const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment, queryAllSingers, queryAllSongs, querySongInfoById, queryUserCommentState, getUserInfoById, updateCommentById, updateUserComment } = require('../service/user.service')
-const { updateSongById, queryAllSongKus } = require('../service/admin.service')
+const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, queryLoveSong, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment, queryAllSingers, queryAllSongs, querySongInfoById, queryUserCommentState, getUserInfoById, updateCommentById, updateUserComment, querySongsByKuId } = require('../service/user.service')
+const { updateSongById, queryAllSongKus, getSingerInfo } = require('../service/admin.service')
 
 // 将执行某个请求的操作写在controller文件夹下
 class UserController {
@@ -344,7 +344,7 @@ class UserController {
 
             songSimpleInfo = songSimpleInfo.map(songInfo => {        
                 const singer_id = songInfo.singer_id
-                let singer_name = 's'
+                let singer_name = ''
                 for (const iterator of singerInfo) {
                     if(iterator.id == singer_id) {
                         singer_name = iterator.singer_name
@@ -452,6 +452,37 @@ class UserController {
         ctx.body = {
             code: '0',
             message: '获取所有歌单成功',
+            result: res
+        }
+    }
+    // 获得歌单中所有的歌曲
+    async getAllSongsInSongKu(ctx) {
+        const { id, user_id } = ctx.query
+        const res = await querySongsByKuId(id)
+
+        for await (const item of res) {
+            const songInfo = await querySongInfoById(item.song_id)
+            const { singer_name } = await getSingerInfo({ id: songInfo.singer_id })
+
+            // 获取用户对某首歌的收藏状态
+            if(user_id) {
+                const res = await queryLoveSong(user_id, item.song_id)
+                item.dataValues.has_love = res.length ? true : false
+            }
+            
+            item.dataValues.songInfo = {
+                singer_id: songInfo.singer_id,
+                song_name: songInfo.song_name,
+                publish_time: songInfo.publish_time,
+                file_name: songInfo.file_name,
+                visitors: songInfo.visitors
+            }
+            item.dataValues.singer_name = singer_name
+           
+        }
+        ctx.body = {
+            code: '0',
+            message: '获取歌单所有歌曲信息成功',
             result: res
         }
     }

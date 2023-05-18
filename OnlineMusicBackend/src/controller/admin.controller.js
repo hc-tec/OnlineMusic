@@ -2,8 +2,8 @@ const path = require('path')
 const fs = require('fs')
 const bcrypt = require('bcryptjs')
 
-const { createSinger, updateSingerById, createSong, updateSongById, queryAllUsers, deleteUserById, deleteSongById, deleteSingerById, queryAllComments, createSongKu, deleteSongKuById, queryAllSongKus } = require('../service/admin.service')
-const { updateUserById, queryAllSongs, deleteComment, getUserInfoById, querySongInfoById } = require('../service/user.service')
+const { createSinger, updateSingerById, createSong, updateSongById, queryAllUsers, deleteUserById, deleteSongById, deleteSingerById, queryAllComments, createSongKu, deleteSongKuById, queryAllSongKus, createSongKuSong, getSingerInfo, deleteSongKuSong } = require('../service/admin.service')
+const { updateUserById, queryAllSongs, deleteComment, getUserInfoById, querySongInfoById, querySongsByKuId } = require('../service/user.service')
 
 class AdminController {
     async addSinger(ctx) {
@@ -287,6 +287,88 @@ class AdminController {
             message: '删除歌单成功',
             result: res
         }
+    }
+    // 添加歌曲入歌单
+    async addSongToSongKu(ctx) {
+        const { song_id, songku_id } = ctx.request.body
+        if(!song_id || !songku_id) {
+            ctx.body = {
+                code: '10052',
+                message: '缺少必要参数',
+                result: ''
+            }
+            return
+        }
+        const res = await querySongInfoById(song_id)
+        if(!res) {
+            ctx.body = {
+                code: '10053',
+                message: '歌曲ID不存在',
+                result: ''
+            }
+            return
+        }
+        const res2 = queryAllSongKus({ id: songku_id })
+        if(res2.length <= 0) {
+            ctx.body = {
+                code: '10054',
+                message: '歌单ID不存在',
+                result: ''
+            }
+            return
+        }
+
+        const song_ids = await querySongsByKuId(songku_id)
+        for (const item of song_ids) {
+            if(item.song_id == song_id) {
+                ctx.body = {
+                    code: '10055',
+                    message: '歌曲已在歌单中',
+                    result: ''
+                }
+                return
+            }
+        }
+
+        // 添加成功则返回歌曲信息
+        try {
+            await createSongKuSong(song_id, songku_id)
+            const songInfo = await querySongInfoById(song_id)
+            const { singer_name } = await getSingerInfo({ id: songInfo.singer_id })
+            songInfo.singer_name = singer_name
+            ctx.body = {
+                code: '0',
+                message: '添加成功',
+                result: songInfo
+            }
+        }
+        catch (error) {
+            ctx.body = {
+                code: '10056',
+                message: '添加失败',
+                result: ''
+            }
+        }
+    }
+    // 从歌单删除歌曲
+    async deleteSongFromSongKu(ctx) {
+        const { song_id, songku_id } = ctx.request.body
+
+        const res = await deleteSongKuSong(song_id, songku_id)
+        if(res) {
+            ctx.body = {
+                code: '0',
+                message: '删除成功',
+                result: res
+            }
+            return
+        }
+        ctx.body = {
+            code: '10057',
+            message: '删除失败',
+            result: ''
+        }
+        
     }
 }
 

@@ -1,12 +1,11 @@
 <template>
   <div class="songku-container" @click="handleClick(props.id, props.songKuName, props.imgSrc, props.description)">
     <div class="img-container">
-      <div class="img-foot"></div>
+      <div class="img-foot" v-if="store.isAdmin"></div>
       <div class="mask">
-        <div class="opra-button">
+        <div class="opra-button" v-if="store.isAdmin">
           <el-icon class="opra-icon" @click.stop="props.handleIconClick(props.id)">
-            <VideoPlay v-if="!store.isAdmin"/>
-            <Delete v-else/>
+            <Delete/>
           </el-icon>
         </div>
       </div>

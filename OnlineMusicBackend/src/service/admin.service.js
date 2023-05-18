@@ -3,6 +3,7 @@ const Song = require('../model/song.model')
 const User = require('../model/user.model')
 const Comment = require('../model/comment.model')
 const SongKu = require('../model/songKu.model')
+const SongKuSong = require('../model/songKuSong.model')
 
 
 class AdminService {
@@ -138,6 +139,18 @@ class AdminService {
     async deleteSongKuById(id) {
         const res = await SongKu.destroy({
             where: { id }
+        })
+        return res
+    }
+    // 添加歌曲到歌单
+    async createSongKuSong(song_id, songku_id) {
+        const res = await SongKuSong.create({ song_id, songku_id })
+        return res.dataValues
+    }
+    // 从歌单删除歌曲
+    async deleteSongKuSong(song_id, songku_id) {
+        const res = await SongKuSong.destroy({
+            where: { song_id, songku_id }
         })
         return res
     }

@@ -5,6 +5,7 @@ const HistorySong = require('../model/historySong.model')
 const Comment = require('../model/comment.model')
 const Singer = require('../model/singer.model')
 const UserComment = require('../model/userComment.model')
+const SongKuSong = require('../model/songKuSong.model')
 class UserService {
 
     async createUser(user_name, password) {
@@ -66,6 +67,14 @@ class UserService {
         const res = await LoveSong.findAll({
             attributes: ['song_id', 'listen_num'],
             where: { user_id }
+        })
+        return res
+    }
+    // 查询用户对某歌曲的收藏状态
+    async queryLoveSong(user_id, song_id) {
+        const res = await LoveSong.findAll({
+            attributes: ['song_id', 'listen_num'],
+            where: { user_id, song_id }
         })
         return res
     }
@@ -175,7 +184,14 @@ class UserService {
         const res = await UserComment.update({ has_zan }, { where: { user_id, comment_id } })
         return !!res[0]
     }
-
+    // 查询歌单下所有歌曲id
+    async querySongsByKuId(songku_id) {
+        const res = await SongKuSong.findAll({
+            attributes: ['id', 'songku_id', 'song_id'],
+            where: { songku_id }
+        })
+        return res
+    }
 
 }
  

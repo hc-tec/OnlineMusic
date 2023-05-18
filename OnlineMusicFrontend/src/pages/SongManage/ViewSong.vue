@@ -166,13 +166,13 @@ onMounted(() => {
   }).catch(err => {
     console.log(err)
   })
+})
+// 停止时更改状态
+nextTick(() => {
+  songAudio.value.addEventListener('ended', () => {
+    data.playState = false
   })
-  // 停止时更改状态
-  nextTick(() => {
-    songAudio.value.addEventListener('ended', () => {
-      data.playState = false
-    })
-  })
+})
   
 </script>
 

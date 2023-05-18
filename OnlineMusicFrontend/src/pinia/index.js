@@ -9,9 +9,13 @@ const useStore = defineStore('main', {
         isAdmin: false,
         userName: '',
         avatarPath: '',
+        playList: [],
     }),
 
     actions: {
+        play(params){
+            console.log(params);
+        }
     },
 })
 
