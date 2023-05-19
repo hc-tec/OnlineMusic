@@ -8,7 +8,8 @@
       </keep-alive>
     </router-view>
   </div>
-  
+
+  <MusicCtrl></MusicCtrl>
 </template>
 
 <script setup>
@@ -19,6 +20,7 @@ import NProgress from "nprogress";
 import "nprogress/nprogress.css"; 
 import axios from './utils/axios';
 import router from './router';
+import MusicCtrl from './components/MusicCtrl.vue';
 
 NProgress.configure({ showSpinner: false })
 const store = useStore()
@@ -63,7 +65,7 @@ onMounted(() => {
 }
 .body-container {
   box-sizing: border-box;
-  padding: 60px 0;
+  padding: 60px 0 70px;
   display: flex;
   flex-direction: column;
   justify-content: start;

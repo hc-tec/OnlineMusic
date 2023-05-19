@@ -1,0 +1,16 @@
+<template>
+  <svg t="1684458025310" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="875" :width="props.myIconSize" :height="props.myIconSize"><path d="M780.8 475.733333L285.866667 168.533333c-27.733333-17.066667-64 4.266667-64 36.266667v614.4c0 32 36.266667 53.333333 64 36.266667l492.8-307.2c29.866667-14.933333 29.866667-57.6 2.133333-72.533334z" p-id="876" :fill="props.myIconColor"></path></svg>
+</template>
+
+<script setup>
+const props = defineProps({
+  myIconSize: String,
+  myIconColor: String
+})
+</script>
+
+<style scoped lang="less">
+.icon {
+  margin-left: 3px;
+}
+</style>
