@@ -28,7 +28,13 @@
     <!-- 搜索框和头像 -->
     <div class="search-and-avatar">
       <!-- 搜索框 -->
-      <el-input v-model="headerData.searchInput" class="search-input" placeholder="搜索音乐或歌手" clearable v-if="!store.isAdmin">
+      <el-input 
+        v-model="headerData.searchInput" 
+        class="search-input" 
+        placeholder="搜索音乐或歌手" 
+        clearable 
+        @keydown.enter="jumpToSearch"
+        v-if="!store.isAdmin">
         <template #prefix>
           <el-icon><search/></el-icon>
         </template>
@@ -84,6 +90,17 @@ const jumpToLogin = () => {
 }
 const jumpToUserCenter = () => {
   router.push('/userCenter')
+}
+const jumpToSearch = () => {
+  router.push({
+    path: '/search',
+    query: {
+      content: headerData.searchInput
+    }
+  })
+  if (store.searchCallback) {
+    store.searchCallback(headerData.searchInput)
+  }
 }
 const exitLogin = () => {
   localStorage.removeItem('token')

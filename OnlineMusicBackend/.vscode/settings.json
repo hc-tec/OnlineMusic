@@ -1,3 +1,17 @@
 {
-    "npm-scripts.showStartNotification": false
+    "npm-scripts.showStartNotification": false,
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "onlinemusicdb",
+            "database": "onlinemusicdb",
+            "username": "root"
+        }
+    ]
 }

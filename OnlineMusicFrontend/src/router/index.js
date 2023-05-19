@@ -29,7 +29,8 @@ const EditSongKu = () => import('../pages/SongKuManage/EditSongKu.vue')
 const LoveSongs = () => import('../pages/LoveSongs.vue')
 const HistorySongs = () => import('../pages/HistorySongs.vue')
 const UserManage = () => import('../pages/UserManage.vue')
-
+const Search = () => import('../pages/Search.vue')
+const UserSongKuDetail = () => import('../pages/UserSongKuDetail.vue')
 
 const CommentManage = () => import('../pages/CommentManage.vue')
 
@@ -90,6 +91,15 @@ const router = createRouter({
         {
             path: '/userManage',
             component: UserManage
+        },
+        {
+            path: '/search',
+            component: Search,
+            props: (route) => ({content: route.query.content})
+        },
+        {
+            path: '/userSongKuDetail',
+            component: UserSongKuDetail,
         },
         {
             path: '/singerManage',

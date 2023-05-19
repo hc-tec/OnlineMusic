@@ -1,6 +1,6 @@
 const Router = require('koa-router')
 
-const { register, login, changePassword, changeAvatar, autoLogin, addLoveSong, deleteLoveSong, listenSong, addComment, deleteComment, getUserAvatar, getAllSingers, getAllSongsSimpleInfo, getSongLyric, getComment, handleFavour, getAllSongKus, getAllSongsInSongKu } = require('../controller/user.controller')
+const { register, login, changePassword, searchSongKuInfo, changeAvatar, autoLogin, searchSongInfo, getLoveSong, addLoveSong, deleteLoveSong, listenSong, addComment, deleteComment, getUserAvatar, getAllSingers, getAllSongsSimpleInfo, getSongLyric, getComment, handleFavour, getAllSongKus, getAllSongsInSongKu } = require('../controller/user.controller')
 const { userValidator, verifyUser, cryptPassword, verifyLogin, auth, verifySongIdExist } = require('../middleware/user.middleware')
 
 const router = new Router()
@@ -15,6 +15,12 @@ router.post('/changeAvatar', auth, changeAvatar)
 
 // 带上token的自动登录接口
 router.post('/autoLogin', auth, autoLogin)
+
+router.get('/searchSongInfo', auth, searchSongInfo)
+
+router.get('/searchSongKuInfo', auth, searchSongKuInfo)
+
+router.get('/getLoveSong', auth, getLoveSong)
 
 router.post('/addLoveSong', auth, verifySongIdExist, addLoveSong)
 

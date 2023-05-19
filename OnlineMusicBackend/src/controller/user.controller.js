@@ -4,7 +4,7 @@ const fs = require('fs')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 
-const { createUser, updateUserById, getUserInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, queryLoveSong, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment, queryAllSingers, queryAllSongs, querySongInfoById, queryUserCommentState, getUserInfoById, updateCommentById, updateUserComment, querySongsByKuId } = require('../service/user.service')
+const { createUser, updateUserById, getUserInfoByName, querySongKuInfoByName, createLoveSong, deleteLoveSong, queryLoveSongByUserId, querySongInfoByName, queryLoveSong, updateLoveSong, updateHistorySong, createHistorySong, createComment, queryCommentInfo, deleteComment, queryAllSingers, queryAllSongs, querySongInfoById, queryUserCommentState, getUserInfoById, updateCommentById, updateUserComment, querySongsByKuId, querySingerById } = require('../service/user.service')
 const { updateSongById, queryAllSongKus, getSingerInfo } = require('../service/admin.service')
 
 // 将执行某个请求的操作写在controller文件夹下
@@ -144,6 +144,63 @@ class UserController {
             ctx.body = {
                 code: '10015',
                 message: '修改头像失败',
+                result: ''
+            }
+        }
+    }
+    // 根据歌曲名称搜索歌曲信息
+    async searchSongInfo(ctx) {
+        try {
+            const { id } = ctx.state.userInfo
+            const { song_name } = ctx.query
+            const SongInfo = await querySongInfoByName(song_name)
+            for await (const item of SongInfo) {
+                const song = item.dataValues
+                const singer = await querySingerById(song.singer_id)
+                song.singer_name = singer.singer_name
+                const has_love = await queryLoveSong(id, song.id)
+                song.has_love = has_love.length ? true : false
+            }
+            ctx.body = {
+                code: '0',
+                message: '搜索歌曲成功',
+                result: SongInfo
+            }
+        }
+        catch (err) {
+            ctx.body = {
+                code: '10061',
+                message: '搜索歌曲失败',
+                result: {}
+            }
+        }
+    }
+    // 获取指定用户id所有喜欢的歌曲
+    async getLoveSong(ctx) {
+        try {
+            const user_id = ctx.state.userInfo.id
+            const loveSongInfo = await queryLoveSongByUserId(user_id)
+            for await (const item of loveSongInfo) {
+                const loveSong = item.dataValues
+                const song = await querySongInfoById(loveSong.song_id)
+                loveSong.song_name = song.song_name
+                loveSong.singer_id = song.singer_id
+                loveSong.publish_time = song.publish_time
+                loveSong.file_name = song.file_name
+                const singer = await querySingerById(song.singer_id)
+                loveSong.singer_name = singer.singer_name
+                loveSong.has_love = true
+            }
+            ctx.body = {
+                code: '0',
+                message: '获取收藏歌曲成功',
+                result: loveSongInfo
+            }
+        }
+        catch (err) {
+            ctx.body = {
+                code: '10060',
+                message: '获取收藏歌曲失败',
                 result: ''
             }
         }
@@ -452,6 +509,16 @@ class UserController {
         ctx.body = {
             code: '0',
             message: '获取所有歌单成功',
+            result: res
+        }
+    }
+    // 根据歌单名称搜索歌单信息
+    async searchSongKuInfo(ctx) {
+        const { ku_name } = ctx.query
+        const res = await querySongKuInfoByName(ku_name)
+        ctx.body = {
+            code: '0',
+            message: '搜索歌单成功',
             result: res
         }
     }

@@ -19,7 +19,8 @@ const useStore = defineStore('main', {
             singer_name: '站街',
             lyric: [{}], // 歌词中每个元素是每行的歌词
 
-        }
+        },
+        searchCallback: null,
     }),
 
     actions: {
@@ -28,7 +29,8 @@ const useStore = defineStore('main', {
         },
         clickSinger(singer_id, singer_name) {
 
-        }
+        },
+        
 
     },
 })

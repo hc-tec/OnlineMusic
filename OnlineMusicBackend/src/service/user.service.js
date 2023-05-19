@@ -1,11 +1,13 @@
 const LoveSong = require('../model/loveSong.model')
 const Song = require('../model/song.model')
+const SongKu = require('../model/songKu.model')
 const User = require('../model/user.model')
 const HistorySong = require('../model/historySong.model')
 const Comment = require('../model/comment.model')
 const Singer = require('../model/singer.model')
 const UserComment = require('../model/userComment.model')
 const SongKuSong = require('../model/songKuSong.model')
+const { Op } = require('sequelize')
 class UserService {
 
     async createUser(user_name, password) {
@@ -53,6 +55,18 @@ class UserService {
         const res = await User.update(newValue, { where: whereOpt })
 
         return !!res[0]
+    }
+    // 根据歌曲名称搜索歌曲信息
+    async querySongInfoByName(song_name) {
+        const res = await Song.findAll({
+            attributes: ['id', 'song_name', 'singer_id', 'publish_time', 'file_name', 'visitors'],
+            where: {
+                song_name: {
+                    [Op.like]: `%${song_name}%`
+                }
+            }
+        })
+        return res
     }
     // 根据歌曲id获取歌曲信息
     async querySongInfoById(id) {
@@ -138,6 +152,14 @@ class UserService {
         })
         return res
     }
+    // 根据歌手id获取歌手信息
+    async querySingerById(id) {
+        const res = await Singer.findOne({
+            attributes: ['id', 'singer_name', 'birthday', 'gender', 'description'],
+            where: { id }
+        })
+        return res ? res.dataValues : null
+    }
     // 查询所有歌曲信息
     async queryAllSongs(includeLyric, singer_id) {
         let attributes = ['id', 'song_name', 'singer_id', 'publish_time', 'file_name', 'visitors']
@@ -189,6 +211,18 @@ class UserService {
         const res = await SongKuSong.findAll({
             attributes: ['id', 'songku_id', 'song_id'],
             where: { songku_id }
+        })
+        return res
+    }
+    // 根据歌单名称搜索歌单信息
+    async querySongKuInfoByName(ku_name) {
+        const res = await SongKu.findAll({
+            attributes: ['id', 'ku_name', 'file_path', 'description'],
+            where: {
+                ku_name: {
+                    [Op.like]: `%${ku_name}%`
+                }
+            }
         })
         return res
     }

@@ -1,0 +1,1 @@
+SELECT `id`, `song_name`, `singer_id`, `publish_time`, `file_name`, `visitors`, `lyric` FROM `songs` AS `Song` WHERE `Song`.`song_name` LIKE '%你%'

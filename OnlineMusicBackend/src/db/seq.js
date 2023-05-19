@@ -5,11 +5,13 @@ const seq = new Sequelize('onlinemusicdb', 'root', 'root', {
     dialect: 'mysql'
 })
 
-// 测试连接
-// seq.authenticate().then(() => {
-//     console.log('成功')
-// }).catch(err => {
-//     console.log(err)
-// })
+//测试连接
+seq.authenticate().then(() => {
+    console.log('成功')
+}).catch(err => {
+    console.log(err)
+})
+
+// seq.sync()
 
 module.exports = seq

@@ -231,6 +231,7 @@ const handleOpraLove = (song_id, has_love) => {
 
 
 watch(() => props.id, () => {
+  data.songKuSongList = []
   let param = ''
   if(store.isLogin) param = `&user_id=${store.id}`
   // 获得歌单所有歌曲
